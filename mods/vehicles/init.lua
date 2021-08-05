@@ -46,7 +46,7 @@ minetest.register_entity("vehicles:missile", {
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
 		local yaw = player:get_look_yaw();
 		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
+		self.object:set_velocity(vec)
 		end
 		local pos = self.object:get_pos()
 		local vec = self.object:get_velocity()
@@ -371,7 +371,7 @@ minetest.register_entity("vehicles:turret", {
 	end,
 	on_punch = vehicles.on_punch,
 	on_step = function(self, dtime)
-	self.object:setvelocity({x=0, y=-1, z=0})
+	self.object:set_velocity({x=0, y=-1, z=0})
 	if self.driver then
 		vehicles.object_drive(self, dtime, {
 			fixed = true,
@@ -1791,7 +1791,7 @@ minetest.register_entity("vehicles:wing_glider", {
 		local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
 		local yaw = self.driver:get_look_yaw();
 		self.object:setyaw(yaw+math.pi/2)
-		self.object:setvelocity(vec)
+		self.object:set_velocity(vec)
 		self.driver:set_animation({x=162, y=167}, 0, 0)
 		if not self.anim then
 		self.object:set_animation({x=25, y=45}, 10, 0)
@@ -1885,7 +1885,7 @@ minetest.register_tool("vehicles:rc", {
 			local remov = inv:remove_item("main", "vehicles:missile_2_item")
 			local obj = minetest.env:add_entity({x=playerpos.x+0+dir.x,y=playerpos.y+1+dir.y,z=playerpos.z+0+dir.z}, "vehicles:missile")
 			local vec = {x=dir.x*6,y=dir.y*6,z=dir.z*6}
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			return item
 		end
 	end,

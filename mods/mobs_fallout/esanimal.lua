@@ -95,7 +95,7 @@ mobs:register_mob("mobs_fallout:sheep", {
 				pos.y = pos.y + 0.5
 				local obj = minetest.add_item(pos, ItemStack("wool:white "..math.random(2,3)))
 				if obj then
-					obj:setvelocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
+					obj:set_velocity({x=math.random(-1,1), y=5, z=math.random(-1,1)})
 				end
 				item:add_wear(650) -- 100 uses
 				clicker:set_wielded_item(item)

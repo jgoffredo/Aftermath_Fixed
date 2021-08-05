@@ -53,7 +53,7 @@ function minetest.handle_node_drops(pos, drops, digger)
 					if math.random(1,2) == 1 then
 						z = -z
 					end
-					obj:setvelocity({x=1/x, y=obj:get_velocity().y, z=1/z})
+					obj:set_velocity({x=1/x, y=obj:get_velocity().y, z=1/z})
 					
 					-- FIXME this doesnt work for deactiveted objects
 					if minetest.settings:get("remove_items") and tonumber(minetest.settings:get("remove_items")) then

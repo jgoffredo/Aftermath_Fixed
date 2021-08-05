@@ -172,7 +172,7 @@ local function rail_on_step(self, dtime)
 	local vel = self.object:get_velocity()
 	if self.punched then
 		vel = vector.add(vel, self.velocity)
-		self.object:setvelocity(vel)
+		self.object:set_velocity(vel)
 		self.old_dir.y = 0
 	elseif vector.equals(vel, {x=0, y=0, z=0}) then
 		return
@@ -186,7 +186,7 @@ local function rail_on_step(self, dtime)
 			(self.old_vel.x * vel.x < 0 or self.old_vel.z * vel.z < 0) then
 		self.old_vel = {x = 0, y = 0, z = 0}
 		self.old_pos = pos
-		self.object:setvelocity(vector.new())
+		self.object:set_velocity(vector.new())
 		self.object:setacceleration(vector.new())
 		rail_on_step_event(get_railparams(pos).on_step, self, dtime)
 		return
@@ -341,7 +341,7 @@ local function rail_on_step(self, dtime)
 	end
 	self.object:set_animation(anim, 1, 0)
 
-	self.object:setvelocity(vel)
+	self.object:set_velocity(vel)
 	if update.pos then
 		self.object:setpos(pos)
 	end

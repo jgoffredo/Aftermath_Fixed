@@ -855,10 +855,10 @@ mobs:register_mob("mobs_fallout:Hobo", {
 	peaceful = true,
 	group_attack = true,
 	step = 1,
-	attacks_monsters = true,
-	peaceful = true,
-	group_attack = true,
-	step = 1,
+	--attacks_monsters = true,
+	---peaceful = true,
+	---group_attack = true,
+	---step = 1,
 
 })
 

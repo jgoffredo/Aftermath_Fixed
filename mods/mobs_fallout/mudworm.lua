@@ -52,15 +52,17 @@ mobs:register_mob("mobs_fallout:mudworm", {
 		local c=2
 		local pos = self.object:get_pos()
 		local v = self.object:get_velocity()
-		for dx = -c*(math.abs(v.x))-1 , c*(math.abs(v.x))+1 do
-			for dy=0,4 do
-				for dz = -c*(math.abs(v.z))-1 , c*(math.abs(v.z))+1 do
-					local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
-					local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
-					local n = minetest.env:get_node(p).name
-					if (n~="default:toxic_water_source" and n~="default:toxic_water_flowing") then
-						if n=="default:mud" or n=="default:mud_flowing" then
-							minetest.env:set_node(t, {name="air"})
+		if v then
+			for dx = -c*(math.abs(v.x))-1 , c*(math.abs(v.x))+1 do
+				for dy=0,4 do
+					for dz = -c*(math.abs(v.z))-1 , c*(math.abs(v.z))+1 do
+						local p = {x=pos.x+dx, y=pos.y, z=pos.z+dz}
+						local t = {x=pos.x+dx, y=pos.y+dy, z=pos.z+dz}
+						local n = minetest.env:get_node(p).name
+						if (n~="default:toxic_water_source" and n~="default:toxic_water_flowing") then
+							if n=="default:mud" or n=="default:mud_flowing" then
+								minetest.env:set_node(t, {name="air"})
+							end
 						end
 					end
 				end

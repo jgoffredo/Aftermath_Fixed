@@ -181,7 +181,7 @@ minetest.register_entity("shooter:turret_entity", {
 				minetest.sound_play("shooter_rocket_fire", {object=obj})
 				ent.player = self.player
 				obj:setyaw(self.yaw)
-				obj:setvelocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
+				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 			end
 		end

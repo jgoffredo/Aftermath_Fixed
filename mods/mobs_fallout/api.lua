@@ -100,7 +100,7 @@ set_velocity = function(self, v)
 
 	local yaw = self.object:get_yaw() + self.rotate or 0
 
-	self.object:setvelocity({
+	self.object:set_velocity({
 		x = sin(yaw) * -v,
 		y = self.object:get_velocity().y,
 		z = cos(yaw) * v
@@ -352,7 +352,7 @@ function check_for_death(self)
 
 				if obj then
 
-					obj:setvelocity({
+					obj:set_velocity({
 						x = math.random(-1, 1),
 						y = 6,
 						z = math.random(-1, 1)
@@ -570,7 +570,7 @@ do_jump = function(self)
 
 		v.y = self.jump_height + 1
 
-		self.object:setvelocity(v)
+		self.object:set_velocity(v)
 
 		if self.sounds.jump then
 
@@ -673,7 +673,7 @@ local function breed(self)
 			})
 
 			-- jump when fully grown so not to fall into ground
-			self.object:setvelocity({
+			self.object:set_velocity({
 				x = 0,
 				y = self.jump_height,
 				z = 0
@@ -1232,7 +1232,7 @@ local follow_flop = function(self)
 	and self.standing_in ~= self.fly_in then
 
 		self.state = "flop"
-		self.object:setvelocity({x = 0, y = -5, z = 0})
+		self.object:set_velocity({x = 0, y = -5, z = 0})
 
 		set_animation(self, "stand")
 
@@ -1562,7 +1562,7 @@ local do_states = function(self, dtime)
 
 					if me_y < p_y then
 
-						self.object:setvelocity({
+						self.object:set_velocity({
 							x = v.x,
 							y = 1 * self.walk_velocity,
 							z = v.z
@@ -1570,7 +1570,7 @@ local do_states = function(self, dtime)
 
 					elseif me_y > p_y then
 
-						self.object:setvelocity({
+						self.object:set_velocity({
 							x = v.x,
 							y = -1 * self.walk_velocity,
 							z = v.z
@@ -1579,7 +1579,7 @@ local do_states = function(self, dtime)
 				else
 					if me_y < p_y then
 
-						self.object:setvelocity({
+						self.object:set_velocity({
 							x = v.x,
 							y = 0.01,
 							z = v.z
@@ -1587,7 +1587,7 @@ local do_states = function(self, dtime)
 
 					elseif me_y > p_y then
 
-						self.object:setvelocity({
+						self.object:set_velocity({
 							x = v.x,
 							y = -0.01,
 							z = v.z
@@ -1787,7 +1787,7 @@ local do_states = function(self, dtime)
 				vec.y = vec.y * (v / amount)
 				vec.z = vec.z * (v / amount)
 
-				obj:setvelocity(vec)
+				obj:set_velocity(vec)
 			end
 		end
 	end
@@ -2020,7 +2020,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		-- direction error check
 		dir = dir or {x = 0, y = 0, z = 0}
 
-		self.object:setvelocity({
+		self.object:set_velocity({
 			x = dir.x * kb,
 			y = up,
 			z = dir.z * kb

@@ -70,7 +70,7 @@ function futuremobs:register_mob(name, def)
 			end
 			local x = math.sin(yaw) * -v
 			local z = math.cos(yaw) * v
-			self.object:setvelocity({x=x, y=self.object:get_velocity().y, z=z})
+			self.object:set_velocity({x=x, y=self.object:get_velocity().y, z=z})
 		end,
 		
 		get_velocity = function(self)
@@ -368,7 +368,7 @@ function futuremobs:register_mob(name, def)
 								if self.jump and self.get_velocity(self) <= 1.5 and self.object:get_velocity().y == 0 then
 									local v = self.object:get_velocity()
 									v.y = 6
-									self.object:setvelocity(v)
+									self.object:set_velocity(v)
 								end
 								self.set_velocity(self, self.walk_velocity)
 							end
@@ -428,7 +428,7 @@ function futuremobs:register_mob(name, def)
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:get_velocity().y == 0 then
 					local v = self.object:get_velocity()
 					v.y = 5
-					self.object:setvelocity(v)
+					self.object:set_velocity(v)
 				end
 				self:set_animation("walk")
 				self.set_velocity(self, self.walk_velocity)
@@ -475,7 +475,7 @@ function futuremobs:register_mob(name, def)
 						if self.jump and self.get_velocity(self) <= 0.5 and self.object:get_velocity().y == 0 then
 							local v = self.object:get_velocity()
 							v.y = 5
-							self.object:setvelocity(v)
+							self.object:set_velocity(v)
 						end
 						self.set_velocity(self, self.run_velocity)
 					end
@@ -564,7 +564,7 @@ function futuremobs:register_mob(name, def)
 					vec.x = vec.x*v/amount
 					vec.y = vec.y*v/amount
 					vec.z = vec.z*v/amount
-					obj:setvelocity(vec)
+					obj:set_velocity(vec)
 				end
 			end
 		end,
@@ -579,7 +579,7 @@ function futuremobs:register_mob(name, def)
 			self.object:set_armor_groups({fleshy=self.armor})
 			self.object:setacceleration({x=0, y=-10, z=0})
 			self.state = "stand"
-			self.object:setvelocity({x=0, y=self.object:get_velocity().y, z=0})
+			self.object:set_velocity({x=0, y=self.object:get_velocity().y, z=0})
 			self.object:setyaw(math.random(1, 360)/180*math.pi)
 			if self.type == "monster" and minetest.settings:get_bool("only_peaceful_futuremobs") then
 				self.object:remove()

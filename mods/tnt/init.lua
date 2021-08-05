@@ -45,7 +45,7 @@ function tnt:eject_drops(drops, pos, radius)
 			if obj then
 				obj:get_luaentity().collect = true
 				obj:setacceleration({x=0, y=-10, z=0})
-				obj:setvelocity({x=math.random(-3, 3), y=10,
+				obj:set_velocity({x=math.random(-3, 3), y=10,
 						z=math.random(-3, 3)})
 			end
 			count = count - max
@@ -118,7 +118,7 @@ function tnt:entity_physics(pos, radius)
 		if obj_vel ~= nil then
 			local vel = tnt:calc_velocity(pos, obj_pos,
 					obj_vel, radius * 10)
-			obj:setvelocity({x=vel.x, y=vel.y, z=vel.z})
+			obj:set_velocity({x=vel.x, y=vel.y, z=vel.z})
 			obj:setacceleration({x=-vel.x/5, y=-10, z=-vel.z/5})
 		end
 
@@ -442,7 +442,7 @@ tnt.ent_proto = {
 
 	on_activate = function( sf, sd )
 		sf.object:set_armor_groups( { immortal=1 } )
-		sf.object:setvelocity({x=math.random(-40,40)/40, y=4, z=math.random(-40,40)/40})
+		sf.object:set_velocity({x=math.random(-40,40)/40, y=4, z=math.random(-40,40)/40})
 		sf.object:setacceleration({x=0, y=-10, z=0})
 		sf.object:settexturemod('^[brighten')
 	end,
@@ -465,7 +465,7 @@ tnt.ent_proto = {
 			local nn = minetest.get_node(p).name
 			if not minetest.registered_nodes[nn] or
 				minetest.registered_nodes[nn].walkable then
-				sf.object:setvelocity({x=0,y=0,z=0})
+				sf.object:set_velocity({x=0,y=0,z=0})
 				sf.object:setacceleration({x=0, y=0, z=0})
 			end
 		end

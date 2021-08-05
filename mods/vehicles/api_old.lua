@@ -68,7 +68,7 @@ end
 
 function object_detach(entity, player, offset)
 	entity.driver = nil
-	entity.object:setvelocity({x=0, y=0, z=0})
+	entity.object:set_velocity({x=0, y=0, z=0})
 	player:set_detach()
 	default.player_attached[player:get_player_name()] = false
 	default.player_set_animation(player, "stand" , 30)
@@ -136,10 +136,10 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	local pos = entity.object:get_pos()
 	local node = minetest.get_node(pos).name
 	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
+		entity.object:set_velocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	elseif ctrl.up then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_forward)
+		entity.object:set_velocity(vec_forward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
 		entity.object:set_animation(moving_anim, 20, 0)
@@ -147,7 +147,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	end
 	elseif ctrl.down then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_backward)
+		entity.object:set_velocity(vec_backward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
 		entity.object:set_animation(moving_anim, 20, 0)
@@ -155,7 +155,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	end
 	elseif not ctrl.down or ctrl.up then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_stop)
+		entity.object:set_velocity(vec_stop)
 	--lib_mount animation
 	if moving_anim ~= nil and entity.moving and not hovering then
 		entity.object:set_animation(stand_anim, 20, 0)
@@ -173,7 +173,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 			local vec = {x=dir.x*14,y=dir.y*14,z=dir.z*14}
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
 			if shoot_anim ~= nil and entity.object:get_animation().range ~= shoot_anim then
@@ -191,9 +191,9 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	if jump == "hover" and ctrl.jump and not entity.jumpcharge then
 		if not ctrl.up then
 		local vec_hover = {x=velo.x+0,y=1,z=velo.z+0}
-		entity.object:setvelocity(vec_hover)
+		entity.object:set_velocity(vec_hover)
 		else
-		entity.object:setvelocity(vec_forward_hover)
+		entity.object:set_velocity(vec_forward_hover)
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
@@ -211,9 +211,9 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	if jump == "jump" and ctrl.jump and not entity.jumpcharge then
 		if not ctrl.up then
 		local vec_jump = {x=velo.x+0,y=4,z=velo.z+0}
-		entity.object:setvelocity(vec_jump)
+		entity.object:set_velocity(vec_jump)
 		else
-		entity.object:setvelocity(vec_forward_hover)
+		entity.object:set_velocity(vec_forward_hover)
 		end
 		hovering = true
 		if jump_anim ~= nil and entity.object:get_animation().range ~= jump_anim and hovering then
@@ -242,11 +242,11 @@ function object_drive_simple(entity, dtime, speed, decell)
 	local yaw = entity.driver:get_look_yaw();
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
 	if ctrl.up then
-		entity.object:setvelocity(vec_forward)
+		entity.object:set_velocity(vec_forward)
 	elseif ctrl.down then
-		entity.object:setvelocity(vec_backward)
+		entity.object:set_velocity(vec_backward)
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setvelocity(vec_stop)
+		entity.object:set_velocity(vec_stop)
 	end
 end
 
@@ -297,9 +297,9 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_ani
 	local pos = entity.object:get_pos()
 	local node = minetest.get_node(pos).name
 	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
+		entity.object:set_velocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	elseif ctrl.up and ctrl.sneak and entity.nitro then
-		entity.object:setvelocity(vec_nitro)
+		entity.object:set_velocity(vec_nitro)
 		local pos = entity.object:get_pos()
 			minetest.add_particlespawner(
 			5, --amount
@@ -326,21 +326,21 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_ani
 		entity.moving = true
 	end
 	elseif ctrl.up then
-		entity.object:setvelocity(vec_forward)
+		entity.object:set_velocity(vec_forward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
 		entity.object:set_animation(move_anim, 20, 0)
 		entity.moving = true
 	end
 	elseif ctrl.down then
-		entity.object:setvelocity(vec_backward)
+		entity.object:set_velocity(vec_backward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
 		entity.object:set_animation(move_anim, 20, 0)
 		entity.moving = true
 	end
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setvelocity(vec_stop)
+		entity.object:set_velocity(vec_stop)
 	--lib_mount animation
 	if stand_anim ~= nil and entity.moving then
 		entity.object:set_animation(stand_anim, 20, 0)
@@ -374,11 +374,11 @@ function object_float(entity, dtime, speed, decell)
 	else entity.floating = false
 	end
 	if ctrl.up and entity.floating then
-		entity.object:setvelocity(vec_forward)
+		entity.object:set_velocity(vec_forward)
 	elseif ctrl.down and entity.floating then
-		entity.object:setvelocity(vec_backward)
+		entity.object:set_velocity(vec_backward)
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setvelocity(vec_stop)
+		entity.object:set_velocity(vec_stop)
 	end
 end
 
@@ -402,7 +402,7 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 			local yaw = entity.driver:get_look_yaw();
 			local vec = {x=dir.x*12, y=dir.y*12, z=dir.z*12}
 			obj:setyaw(yaw+math.pi/2)
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
 			minetest.after(shoot_interval, function()
@@ -443,16 +443,16 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	local pos = entity.object:get_pos()
 	local node = minetest.get_node(pos).name
 	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
-		entity.object:setvelocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
+		entity.object:set_velocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	elseif ctrl.up then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
 		--entity.object:setpitch(pitch+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_forward)
+		entity.object:set_velocity(vec_forward)
 		entity.object:setacceleration(acc_forward)
 	--elseif ctrl.down then
 		--entity.object:setyaw(yaw+math.pi+math.pi/2)
 		--entity.object:setpitch(pitch+math.pi+math.pi/2)
-		--entity.object:setvelocity(vec_backward)
+		--entity.object:set_velocity(vec_backward)
 		--entity.object:setacceleration(acc_backward)
 		
 		--lib_mount animation
@@ -462,7 +462,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	end
 	elseif ctrl.jump and mode2 == "rise" then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_rise)
+		entity.object:set_velocity(vec_rise)
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
 		entity.object:set_animation(moving_anim, 20, 0)
@@ -470,7 +470,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	end
 	elseif not ctrl.up and not ctrl.jump then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_stop)
+		entity.object:set_velocity(vec_stop)
 		entity.object:setacceleration({x=0, y=-4.5, z=0})
 		--lib_mount animation
 	if stand_anim ~= nil and entity.moving then
@@ -479,9 +479,9 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	end
 	end
 	if ctrl.jump and ctrl.up and mode2 == "hold" then
-	entity.object:setvelocity({x=dir.x*speed, y=0, z=dir.z*speed})
+	entity.object:set_velocity({x=dir.x*speed, y=0, z=dir.z*speed})
 	elseif not ctrl.jump and not ctrl.up then
-	entity.object:setvelocity({x=velo.x*decell, y=-1, z=velo.z*decell})
+	entity.object:set_velocity({x=velo.x*decell, y=-1, z=velo.z*decell})
 	end
 	if ctrl.sneak and shoots and entity.loaded then
 		local pname = entity.driver:get_player_name();
@@ -494,7 +494,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
 			local yaw = entity.driver:get_look_yaw();
 			obj:setyaw(yaw+math.pi/2)
-			obj:setvelocity(vec)
+			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
 			minetest.after(reload, function()
@@ -513,14 +513,14 @@ function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_
 	local yaw = entity.driver:get_look_yaw();
 	if not ctrl.sneak then
 		entity.object:setyaw(yaw+math.pi+math.pi/2)
-		entity.object:setvelocity(vec_glide)
+		entity.object:set_velocity(vec_glide)
 		entity.object:setacceleration({x=0, y=gravity, z=0})
 	end
 	if ctrl.sneak then
 			local vec = {x=0,y=gravity*15,z=0}
 			local yaw = entity.driver:get_look_yaw();
 			entity.object:setyaw(yaw+math.pi+math.pi/2)
-			entity.object:setvelocity(vec)
+			entity.object:set_velocity(vec)
 	end
 	if velo.y == 0 then
 		local pos = entity.object:get_pos()
@@ -647,7 +647,7 @@ end
 	-- local s = get_sign(entity.v)
 	-- entity.v = entity.v - 0.02 * s
 	-- if s ~= get_sign(entity.v) then
-		-- entity.object:setvelocity({x = 0, y = 0, z = 0})
+		-- entity.object:set_velocity({x = 0, y = 0, z = 0})
 		-- entity.v = 0
 		-- return
 	-- end
@@ -700,7 +700,7 @@ end
 	-- if can_fly and can_fly == true and ctrl.jump then 
 		-- new_velo.y = new_velo.y + 0.75
 	-- end
-	-- entity.object:setvelocity(new_velo)
+	-- entity.object:set_velocity(new_velo)
 	-- entity.object:setacceleration(new_acce)
 -- end
 
@@ -725,7 +725,7 @@ minetest.register_craftitem(vehicle.."_spawner", {
 			return item
 			elseif pointed_thing.type == "node" and minetest.get_item_group(pointed_thing.name, "water") then
 			local obj = minetest.env:add_entity(pointed_thing.under, vehicle)
-			obj:setvelocity({x=0, y=-1, z=0})
+			obj:set_velocity({x=0, y=-1, z=0})
 			local object = obj:get_luaentity()
 			object.owner = placer
 			item:take_item()

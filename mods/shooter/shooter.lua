@@ -387,7 +387,14 @@ function shooter:fire_weapon(user, pointed_thing, def)
 		if shooter:is_valid_object(object) == true then
 			object:punch(user, nil, def.tool_caps, v1)
 			local p2 = object:get_pos()
-			local pp = get_particle_pos(p1, v1, vector.distance(p1, p2))
+			-- JGoffredo
+			local pp
+			if p2 then
+				pp = get_particle_pos(p1, v1, vector.distance(p1, p2))
+			else
+				-- Bad work around.
+				pp = get_particle_pos(p1, v1, vector.distance(p1, p1))
+			end
 			pp.y = pp.y + 1.75
 			shooter:spawn_particles(pp, SHOOTER_EXPLOSION_TEXTURE)
 		end

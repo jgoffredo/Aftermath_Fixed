@@ -4,6 +4,7 @@
 --maikerumine added bones and follow for mobs:
 --lines 56,57,338-363,1935-1983,3174-3211
 --revised 20161030 by maikerumine
+--revised 20210802 by jgoffredo
 ]]
 
 
@@ -367,7 +368,7 @@ function check_for_death(self)
 
 				if obj then
 
-					obj:setvelocity({
+					obj:set_velocity({
 						x = math.random(-1, 1),
 						y = 6,
 						z = math.random(-1, 1)
@@ -591,7 +592,7 @@ do_jump = function(self)
 
 		v.y = self.jump_height + 1
 
-		self.object:setvelocity(v)
+		self.object:set_velocity(v)
 
 		if self.sounds.jump then
 
@@ -694,7 +695,7 @@ local function breed(self)
 			})
 
 			-- jump when fully grown so not to fall into ground
-			self.object:setvelocity({
+			self.object:set_velocity({
 				x = 0,
 				y = self.jump_height,
 				z = 0
@@ -1263,7 +1264,7 @@ local follow_flop = function(self)
 	and self.standing_in ~= self.fly_in then
 
 		self.state = "flop"
-		self.object:setvelocity({x = 0, y = -5, z = 0})
+		self.object:set_velocity({x = 0, y = -5, z = 0})
 
 		set_animation(self, "stand")
 
@@ -1602,7 +1603,7 @@ local do_states = function(self, dtime)
 
 						if me_y < p_y then
 
-							self.object:setvelocity({
+							self.object:set_velocity({
 								x = v.x,
 								y = 1 * self.walk_velocity,
 								z = v.z
@@ -1610,7 +1611,7 @@ local do_states = function(self, dtime)
 
 						elseif me_y > p_y then
 
-							self.object:setvelocity({
+							self.object:set_velocity({
 								x = v.x,
 								y = -1 * self.walk_velocity,
 								z = v.z
@@ -1619,7 +1620,7 @@ local do_states = function(self, dtime)
 					else
 						if me_y < p_y then
 
-							self.object:setvelocity({
+							self.object:set_velocity({
 								x = v.x,
 								y = 0.01,
 								z = v.z
@@ -1627,7 +1628,7 @@ local do_states = function(self, dtime)
 
 						elseif me_y > p_y then
 
-							self.object:setvelocity({
+							self.object:set_velocity({
 								x = v.x,
 								y = -0.01,
 								z = v.z
@@ -1827,7 +1828,7 @@ local do_states = function(self, dtime)
 					vec.y = vec.y * (v / amount)
 					vec.z = vec.z * (v / amount)
 
-					obj:setvelocity(vec)
+					obj:set_velocity(vec)
 				end
 			end
 		end
@@ -1988,36 +1989,40 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			if hitter and hitter:is_player() and hitter:get_inventory() then
 					
 					local pos = self.object:get_pos()
-					local nn = minetest.get_node(pos).name
-					local spaceforbones=nil
+
+					if pos then
+						local nn = minetest.get_node(pos).name
+						local spaceforbones=nil
 							
-					if nn=="air" or nn=="default:water_flowing" or nn=="default:water_source" or nn=="default:lava_source" or nn=="default:lava_flowing" or nn=="default:snow" then
-						spaceforbones=pos
-						minetest.add_node(spaceforbones, {name="bones:bones"} )
-						local meta = minetest.get_meta(spaceforbones)
-						local inv = meta:get_inventory()
-						inv:set_size("main", 8*4)
+						if nn=="air" or nn=="default:water_flowing" or nn=="default:water_source" or nn=="default:lava_source" or nn=="default:lava_flowing" or nn=="default:snow" then
+							spaceforbones=pos
+							minetest.add_node(spaceforbones, {name="bones:bones"} )
+							local meta = minetest.get_meta(spaceforbones)
+							local inv = meta:get_inventory()
+							inv:set_size("main", 8*4)
 								
-						for _,drop in ipairs(self.drops) do
-						local stack = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
-							if inv:room_for_item("main", stack) then
-								inv:add_item("main", stack)
+							for _,drop in ipairs(self.drops) do
+								local stack = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
+
+								if inv:room_for_item("main", stack) then
+									inv:add_item("main", stack)
+								end
 							end
-					end
-					meta:set_string("formspec", "size[8,9;]"..
-					"list[current_name;main;0,0;8,4;]"..
-					"list[current_player;main;0,5;8,4;]")
-					local time = os.date("*t");
-					--SHOW TIME AT DEATH AND WHO KILLED
-					meta:set_string("infotext", self.name.." was slain".." at ".. time.year .. "/".. time.month .. "/" .. time.day .. ", " ..time.hour.. ":".. time.min .." by: ("..hitter:get_player_name()..")");
-					meta:set_string("owner", self.name)
-					meta:set_int("bonetime_counter", 0)
-					local timer  = minetest.get_node_timer(spaceforbones)
-					timer:start(1)
-					print ("("..hitter:get_player_name().. "just killed mob" )
+							meta:set_string("formspec", "size[8,9;]"..
+							"list[current_name;main;0,0;8,4;]"..
+							"list[current_player;main;0,5;8,4;]")
+							local time = os.date("*t");
+							--SHOW TIME AT DEATH AND WHO KILLED
+							meta:set_string("infotext", self.name.." was slain".." at ".. time.year .. "/".. time.month .. "/" .. time.day .. ", " ..time.hour.. ":".. time.min .." by: ("..hitter:get_player_name()..")");
+							meta:set_string("owner", self.name)
+							meta:set_int("bonetime_counter", 0)
+							local timer  = minetest.get_node_timer(spaceforbones)
+							timer:start(1)
+							print ("("..hitter:get_player_name().. "just killed mob" )
+						end
 					end
 					
-			print ("Clown down ")
+				print ("Clown down ")
 			end
 		end
 	end
@@ -2050,20 +2055,20 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and tflp > punch_interval then
 
 		local v = self.object:get_velocity()
+
 		local r = 1.4 - min(punch_interval, 1.4)
 		local kb = r * 5
 		local up = 2
 
 		-- if already in air then dont go up anymore when hit
-		if v.y > 0
-		or self.fly then
+		if v == niL or v.y > 0 or self.fly then
 			up = 0
 		end
 
 		-- direction error check
 		dir = dir or {x = 0, y = 0, z = 0}
 
-		self.object:setvelocity({
+		self.object:set_velocity({
 			x = dir.x * kb,
 			y = up,
 			z = dir.z * kb

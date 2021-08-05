@@ -58,7 +58,7 @@ minetest.register_entity("shooter:arrow_entity", {
 			physical = true,
 			collisionbox = {-1/8,-1/8,-1/8, 1/8,1/8,1/8},
 		})
-		self.object:setvelocity({x=0, y=0, z=0})
+		self.object:set_velocity({x=0, y=0, z=0})
 		self.object:setacceleration(acceleration)
 	end,
 	strike = function(self, object)
@@ -204,7 +204,7 @@ for _, color in pairs(dye_basecolors) do
 					local frame = get_animation_frame(dir)
 					obj:setyaw(yaw + math.pi)
 					obj:set_animation({x=frame, y=frame}, 0)
-					obj:setvelocity({x=dir.x * 14, y=dir.y * 14, z=dir.z * 14})
+					obj:set_velocity({x=dir.x * 14, y=dir.y * 14, z=dir.z * 14})
 					if pointed_thing.type ~= "nothing" then
 						local ppos = minetest.get_pointed_thing_position(pointed_thing, false)
 						local _, npos = minetest.line_of_sight(pos, ppos, 1)

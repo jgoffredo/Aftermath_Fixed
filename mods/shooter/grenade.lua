@@ -56,7 +56,7 @@ minetest.register_tool("shooter:grenade", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "shooter:grenade_entity")
 			if obj then
-				obj:setvelocity({x=dir.x * 15, y=dir.y * 15, z=dir.z * 15})
+				obj:set_velocity({x=dir.x * 15, y=dir.y * 15, z=dir.z * 15})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()

@@ -25,7 +25,7 @@ minetest.register_craftitem("rangedweapons:javelin", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:javelin_entity")
 			if obj then
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -118,7 +118,7 @@ minetest.override_item('default:clay_brick', {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:brick")
 			if obj then
-				obj:setvelocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
+				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -228,7 +228,7 @@ minetest.register_craftitem("rangedweapons:wooden_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:woodsr")
 			if obj then
-				obj:setvelocity({x=dir.x * 35, y=dir.y * 35, z=dir.z * 35})
+				obj:set_velocity({x=dir.x * 35, y=dir.y * 35, z=dir.z * 35})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -325,7 +325,7 @@ minetest.register_craftitem("rangedweapons:stone_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:stonesr")
 			if obj then
-				obj:setvelocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
+				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -422,7 +422,7 @@ minetest.register_craftitem("rangedweapons:steel_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:steelsr")
 			if obj then
-				obj:setvelocity({x=dir.x * 45, y=dir.y * 45, z=dir.z * 45})
+				obj:set_velocity({x=dir.x * 45, y=dir.y * 45, z=dir.z * 45})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -519,7 +519,7 @@ minetest.register_craftitem("rangedweapons:bronze_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:bronzesr")
 			if obj then
-				obj:setvelocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
+				obj:set_velocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -615,7 +615,7 @@ minetest.register_craftitem("rangedweapons:gold_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:goldsr")
 			if obj then
-				obj:setvelocity({x=dir.x * 35, y=dir.y * 35, z=dir.z * 35})
+				obj:set_velocity({x=dir.x * 35, y=dir.y * 35, z=dir.z * 35})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -711,7 +711,7 @@ minetest.register_craftitem("rangedweapons:mese_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:mesesr")
 			if obj then
-				obj:setvelocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
+				obj:set_velocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -808,7 +808,7 @@ minetest.register_craftitem("rangedweapons:diamond_shuriken", {
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "rangedweapons:diamondsr")
 			if obj then
-				obj:setvelocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
+				obj:set_velocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -904,52 +904,52 @@ minetest.register_tool("rangedweapons:jackhammer", {
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 			if obj then
 				minetest.sound_play("shotgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
-				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
-
-			pos.y = pos.y + 0
-			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
-				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 42})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 42})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
+
+			pos.y = pos.y + 0
+			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
+				minetest.sound_play("", {object=obj})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:jackhammershot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 18})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 18})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 				if ent then
@@ -1043,61 +1043,61 @@ minetest.register_tool("rangedweapons:boomstick", {
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 			if obj then
 				minetest.sound_play("shotgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
-				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
-
-			pos.y = pos.y + 0
-			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
-				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 42})
-				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
-			pos.y = pos.y + 0
-			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
-				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 45})
-				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
-			pos.y = pos.y + 0
-			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
-				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 42})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 45})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 18})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
+
+			pos.y = pos.y + 0
+			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
+				minetest.sound_play("", {object=obj})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 15})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
+				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
+			pos.y = pos.y + 0
+			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
+				minetest.sound_play("", {object=obj})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 18})
+				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
+			pos.y = pos.y + 0
+			local obj = minetest.add_entity(pos, "rangedweapons:boomstickshot")
+				minetest.sound_play("", {object=obj})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 15})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 				if ent then
@@ -1191,41 +1191,41 @@ minetest.register_tool("rangedweapons:sawedoff", {
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 			if obj then
 				minetest.sound_play("shotgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 33})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 36})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
-				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
-
-			pos.y = pos.y + 0
-			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
-				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 39})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 27})
+				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
+
+			pos.y = pos.y + 0
+			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
+				minetest.sound_play("", {object=obj})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 24})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:sawedoffshot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 21})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 				if ent then
@@ -1319,31 +1319,31 @@ minetest.register_tool("rangedweapons:spas12", {
 			local obj = minetest.add_entity(pos, "rangedweapons:spas12shot")
 			if obj then
 				minetest.sound_play("shotgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:spas12shot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 35})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 35})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:spas12shot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 40})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 40})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:spas12shot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 25})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 25})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 			pos.y = pos.y + 0
 			local obj = minetest.add_entity(pos, "rangedweapons:spas12shot")
 				minetest.sound_play("", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 20})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 20})
 				obj:setacceleration({x=dir.x * 0, y= 0, z=dir.z * 0})
 
 				if ent then
@@ -1450,7 +1450,7 @@ minetest.register_tool("rangedweapons:makarov", {
 			local obj = minetest.add_entity(pos, "rangedweapons:makarovshot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 45, y=dir.y * 45, z=dir.z * 45})
+				obj:set_velocity({x=dir.x * 45, y=dir.y * 45, z=dir.z * 45})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -1545,7 +1545,7 @@ minetest.register_tool("rangedweapons:bereta", {
 			local obj = minetest.add_entity(pos, "rangedweapons:beretashot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
+				obj:set_velocity({x=dir.x * 50, y=dir.y * 50, z=dir.z * 50})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -1641,7 +1641,7 @@ minetest.register_tool("rangedweapons:deagle", {
 			local obj = minetest.add_entity(pos, "rangedweapons:deagleshot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 55, y=dir.y * 55, z=dir.z * 55})
+				obj:set_velocity({x=dir.x * 55, y=dir.y * 55, z=dir.z * 55})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -1752,7 +1752,7 @@ minetest.register_tool("rangedweapons:python", {
 			local obj = minetest.add_entity(pos, "rangedweapons:pythonshot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 90, y=dir.y * 90, z=dir.z * 90})
+				obj:set_velocity({x=dir.x * 90, y=dir.y * 90, z=dir.z * 90})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -1848,7 +1848,7 @@ minetest.register_tool("rangedweapons:taurus", {
 			local obj = minetest.add_entity(pos, "rangedweapons:taurusshot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 100, y=dir.y * 100, z=dir.z * 100})
+				obj:set_velocity({x=dir.x * 100, y=dir.y * 100, z=dir.z * 100})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -1944,7 +1944,7 @@ minetest.register_tool("rangedweapons:colt45", {
 			local obj = minetest.add_entity(pos, "rangedweapons:colt45shot")
 			if obj then
 				minetest.sound_play("handgun_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 80, y=dir.y * 80, z=dir.z * 80})
+				obj:set_velocity({x=dir.x * 80, y=dir.y * 80, z=dir.z * 80})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2056,7 +2056,7 @@ minetest.register_tool("rangedweapons:leenfield", {
 			local obj = minetest.add_entity(pos, "rangedweapons:leenfieldshot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 75, y=dir.y * 75, z=dir.z * 75})
+				obj:set_velocity({x=dir.x * 75, y=dir.y * 75, z=dir.z * 75})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2149,7 +2149,7 @@ minetest.register_tool("rangedweapons:mosinnagant", {
 			local obj = minetest.add_entity(pos, "rangedweapons:mosinnagantshot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 70, y=dir.y * 70, z=dir.z * 70})
+				obj:set_velocity({x=dir.x * 70, y=dir.y * 70, z=dir.z * 70})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2243,7 +2243,7 @@ minetest.register_tool("rangedweapons:scout", {
 			local obj = minetest.add_entity(pos, "rangedweapons:scoutshot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 80, y=dir.y * 80, z=dir.z * 80})
+				obj:set_velocity({x=dir.x * 80, y=dir.y * 80, z=dir.z * 80})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2338,7 +2338,7 @@ minetest.register_tool("rangedweapons:awp", {
 			local obj = minetest.add_entity(pos, "rangedweapons:awpshot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 90, y=dir.y * 90, z=dir.z * 90})
+				obj:set_velocity({x=dir.x * 90, y=dir.y * 90, z=dir.z * 90})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2452,7 +2452,7 @@ minetest.register_tool("rangedweapons:electrogun", {
 			local obj = minetest.add_entity(pos, "rangedweapons:electrogunshot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 2, y=dir.y * 2, z=dir.z * 2})
+				obj:set_velocity({x=dir.x * 2, y=dir.y * 2, z=dir.z * 2})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
@@ -2546,7 +2546,7 @@ minetest.register_tool("rangedweapons:laser", {
 			local obj = minetest.add_entity(pos, "rangedweapons:lasershot")
 			if obj then
 				minetest.sound_play("rifle_shoot", {object=obj})
-				obj:setvelocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
+				obj:set_velocity({x=dir.x * 30, y=dir.y * 30, z=dir.z * 30})
 				obj:setacceleration({x=dir.x * 0, y=0, z=dir.z * 0})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()

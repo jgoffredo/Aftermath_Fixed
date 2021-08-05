@@ -64,7 +64,7 @@ minetest.register_tool("shooter:rocket_gun_loaded", {
 			local obj = minetest.add_entity(pos, "shooter:rocket_entity")
 			if obj then
 				minetest.sound_play("shooter_rocket_fire", {object=obj})
-				obj:setvelocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
+				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()

@@ -61,7 +61,7 @@ minetest.register_entity("shooter:flare_entity", {
 			local below = {x=pos.x, y=pos.y - 1, z=pos.z}
 			local node = minetest.get_node(below)
 			if node.name ~= "air" then
-				self.object:setvelocity({x=0, y=-10, z=0})
+				self.object:set_velocity({x=0, y=-10, z=0})
 				self.object:setacceleration({x=0, y=0, z=0})
 				if minetest.get_node(pos).name == "air" and
 						node.name ~= "default:water_source" and
@@ -116,7 +116,7 @@ minetest.register_tool("shooter:flaregun", {
 			local obj = minetest.add_entity(pos, "shooter:flare_entity")
 			if obj then
 				minetest.sound_play("shooter_flare_fire", {object=obj})
-				obj:setvelocity({x=dir.x * 16, y=dir.y * 16, z=dir.z * 16})
+				obj:set_velocity({x=dir.x * 16, y=dir.y * 16, z=dir.z * 16})
 				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 				obj:setyaw(yaw + math.pi)
 				local ent = obj:get_luaentity()

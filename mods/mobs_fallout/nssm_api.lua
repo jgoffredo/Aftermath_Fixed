@@ -152,7 +152,7 @@ function mobs:explosion(pos, exp_radius, fire)
 
         						if obj then
 
-        							obj:setvelocity({
+        							obj:set_velocity({
         								x = math.random(-2, 2),
         								y = 7,
         								z = math.random(-2, 2)

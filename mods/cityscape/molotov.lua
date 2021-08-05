@@ -25,7 +25,7 @@ local function throw_cocktail(item, player)
 	local playerpos = player:get_pos()
 	local obj = minetest.add_entity({x=playerpos.x,y=playerpos.y+1.625,z=playerpos.z}, 'cityscape:molotov_entity')
 	local dir = player:get_look_dir()
-	obj:setvelocity({x=dir.x*30, y=dir.y*30, z=dir.z*30})
+	obj:set_velocity({x=dir.x*30, y=dir.y*30, z=dir.z*30})
 	obj:setacceleration({x=dir.x*-3, y=-dir.y^8*80-10, z=dir.z*-3})
 	if not minetest.settings:get_bool('creative_mode') then
 		item:take_item()
