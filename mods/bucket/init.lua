@@ -322,6 +322,16 @@ minetest.override_item("default:water_source", {
 	end,
 })
 
+-- JGoffredo with wwar help. I am not sure if this is needed, but the others have.
+minetest.override_item("default:clean_water_source", {
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
+		if not minetest.check_player_privs(placer:get_player_name(),
+				{liquid = true}) then
+			minetest.remove_node(pos)
+		end
+	end,
+})
+
 minetest.override_item("default:toxic_water_source", {
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		if not minetest.check_player_privs(placer:get_player_name(),

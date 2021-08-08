@@ -288,20 +288,19 @@ end
 -- update nametag colour
 function update_tag(self)
 
-	local col = "#00FF00"
+	local col
 	local qua = self.hp_max / 4
-
-	if self.health <= floor(qua * 3) then
-		col = "#FFFF00"
-	end
-
-	if self.health <= floor(qua * 2) then
-		col = "#FF6600"
-	end
 
 	if self.health <= floor(qua) then
 		col = "#FF0000"
+	elseif self.health <= floor(qua * 2) then
+		col = "#FF6600"
+	elseif self.health <= floor(qua * 3) then
+		col = "#FFFF00"
+	else
+		col = "#00FF00"
 	end
+
 
 	self.object:set_properties({
 		nametag = self.nametag,
@@ -315,7 +314,7 @@ function check_for_death(self)
 
 	-- has health actually changed?
 	if self.health == self.old_health then
-		return
+		return false
 	end
 
 	self.old_health = self.health
@@ -381,6 +380,7 @@ function check_for_death(self)
 	-- play death sound
 	if self.sounds.death then
 
+		print("Teste JGoffredo Morrendo")
 		minetest.sound_play(self.sounds.death, {
 			object = self.object,
 			gain = 1.0,
@@ -391,11 +391,17 @@ function check_for_death(self)
 	-- execute custom death function
 	if self.on_die then
 
+		print("Teste JGoffredo self.on_die")
 		self.on_die(self, pos)
-		self.object:remove()
+
+		-- JGoffredo: Can not remove yet, if enable_mob_bones is on.
+		if enable_mob_bones == false then
+			self.object:remove()
+		end
 
 		return true
 	end
+	print("Teste JGoffredo Morrendo 2")
 
 	-- default death function
 	-- JGoffredo: Can not remove yet, if enable_mob_bones is on.
@@ -543,7 +549,10 @@ do_env_damage = function(self)
 		end
 	end
 
-	check_for_death(self)
+	-- JGoffredo: In this case must remove here.
+	if check_for_death(self) and enable_mob_bones == true then
+		self.object:remove()
+	end
 end
 
 -- jump if facing a solid node (not fences or gates)
@@ -1890,6 +1899,11 @@ local falling = function(self, pos)
 				effect(pos, 5, "tnt_smoke.png")
 
 				if check_for_death(self) then
+					-- JGoffredo: In this case must remove here.
+					if enable_mob_bones == true then
+						self.object:remove()
+					end
+
 					return
 				end
 			end
@@ -1992,44 +2006,48 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		if enable_mob_bones == true then
 			if hitter and hitter:is_player() and hitter:get_inventory() then
 					
-					local pos = self.object:get_pos()
+				local pos = self.object:get_pos()
 
-					-- JGoffredo. After get pos, can remove object.
-					self.object:remove()
+				-- JGoffredo. After get pos, can remove object.
+				self.object:remove()
 
-					if pos then
-						local nn = minetest.get_node(pos).name
-						local spaceforbones=nil
+				if pos then
+					local nn = minetest.get_node(pos).name
+					local spaceforbones=nil
+						
+					if nn=="air" or nn=="default:water_flowing" or nn=="default:water_source" or nn=="default:lava_source" or nn=="default:lava_flowing" or nn=="default:snow" then
+						spaceforbones=pos
+						minetest.add_node(spaceforbones, {name="bones:bones"} )
+						local meta = minetest.get_meta(spaceforbones)
+						local inv = meta:get_inventory()
+						inv:set_size("main", 8*4)
 							
-						if nn=="air" or nn=="default:water_flowing" or nn=="default:water_source" or nn=="default:lava_source" or nn=="default:lava_flowing" or nn=="default:snow" then
-							spaceforbones=pos
-							minetest.add_node(spaceforbones, {name="bones:bones"} )
-							local meta = minetest.get_meta(spaceforbones)
-							local inv = meta:get_inventory()
-							inv:set_size("main", 8*4)
-								
-							for _,drop in ipairs(self.drops) do
-								local stack = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
+						for _,drop in ipairs(self.drops) do
+							local stack = ItemStack(drop.name.." "..math.random(drop.min, drop.max))
 
-								if inv:room_for_item("main", stack) then
-									inv:add_item("main", stack)
-								end
+							if inv:room_for_item("main", stack) then
+								inv:add_item("main", stack)
 							end
-							meta:set_string("formspec", "size[8,9;]"..
-							"list[current_name;main;0,0;8,4;]"..
-							"list[current_player;main;0,5;8,4;]")
-							local time = os.date("*t");
-							--SHOW TIME AT DEATH AND WHO KILLED
-							meta:set_string("infotext", self.name.." was slain".." at ".. time.year .. "/".. time.month .. "/" .. time.day .. ", " ..time.hour.. ":".. time.min .." by: ("..hitter:get_player_name()..")");
-							meta:set_string("owner", self.name)
-							meta:set_int("bonetime_counter", 0)
-							local timer  = minetest.get_node_timer(spaceforbones)
-							timer:start(1)
-							print ("("..hitter:get_player_name().. "just killed mob" )
 						end
+						meta:set_string("formspec", "size[8,9;]"..
+						"list[current_name;main;0,0;8,4;]"..
+						"list[current_player;main;0,5;8,4;]")
+						local time = os.date("*t");
+						--SHOW TIME AT DEATH AND WHO KILLED
+						meta:set_string("infotext", self.name.." was slain".." at ".. time.year .. "/".. time.month .. "/" .. time.day .. ", " ..time.hour.. ":".. time.min .." by: ("..hitter:get_player_name()..")");
+						meta:set_string("owner", self.name)
+						meta:set_int("bonetime_counter", 0)
+						local timer  = minetest.get_node_timer(spaceforbones)
+						timer:start(1)
+						print ("("..hitter:get_player_name().. "just killed mob" )
 					end
+				end
 					
 				print ("Clown down ")
+			else
+				print("Teste JGoffredo Just Removing.")
+				-- JGoffredo. Here can just remove.
+				self.object:remove()
 			end
 		end
 	end
