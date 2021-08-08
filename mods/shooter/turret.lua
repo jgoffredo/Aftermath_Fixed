@@ -144,7 +144,7 @@ minetest.register_entity("shooter:turret_entity", {
 					self.pitch = pitch
 				end
 				if self.yaw ~= yaw then
-					self.object:setyaw(yaw)
+					self.object:set_yaw(yaw)
 					self.yaw = yaw
 				end
 			end
@@ -180,9 +180,9 @@ minetest.register_entity("shooter:turret_entity", {
 			if ent then
 				minetest.sound_play("shooter_rocket_fire", {object=obj})
 				ent.player = self.player
-				obj:setyaw(self.yaw)
+				obj:set_yaw(self.yaw)
 				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
-				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
+				obj:set_acceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
 			end
 		end
 		if SHOOTER_ENABLE_PARTICLE_FX == true then

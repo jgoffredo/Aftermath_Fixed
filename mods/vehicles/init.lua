@@ -44,8 +44,8 @@ minetest.register_entity("vehicles:missile", {
 		--never tested with multiple players
 		local dir = player:get_look_dir();
 		local vec = {x=dir.x*16,y=dir.y*16,z=dir.z*16}
-		local yaw = player:get_look_yaw();
-		self.object:setyaw(yaw+math.pi/2)
+		local yaw = player:get_look_horizontal();
+		self.object:set_yaw(yaw+math.pi/2)
 		self.object:set_velocity(vec)
 		end
 		local pos = self.object:get_pos()
@@ -203,7 +203,7 @@ minetest.register_entity("vehicles:water", {
 	damage = 2,
 	collisionbox = {0, 0, 0, 0, 0, 0},
 	on_activate = function(self)
-		self.object:setacceleration({x=0, y=-1, z=0})
+		self.object:set_acceleration({x=0, y=-1, z=0})
 	end,
 	on_step = function(self, obj, pos)
 		minetest.after(5, function()
@@ -1789,8 +1789,8 @@ minetest.register_entity("vehicles:wing_glider", {
 		local velo = self.object:get_velocity();
 		local speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 		local vec = {x=dir.x*16,y=dir.y*16+1,z=dir.z*16}
-		local yaw = self.driver:get_look_yaw();
-		self.object:setyaw(yaw+math.pi/2)
+		local yaw = self.driver:get_look_horizontal();
+		self.object:set_yaw(yaw+math.pi/2)
 		self.object:set_velocity(vec)
 		self.driver:set_animation({x=162, y=167}, 0, 0)
 		if not self.anim then

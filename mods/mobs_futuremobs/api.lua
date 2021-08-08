@@ -189,15 +189,15 @@ function futuremobs:register_mob(name, def)
 				local x = math.sin(yaw) * -2
 				local z = math.cos(yaw) * 2
 				 if minetest.get_item_group(minetest.get_node(self.object:get_pos()).name, "water") ~= 0 then
-                    self.object:setacceleration({x = x, y = 1.5, z = z})
+                    self.object:set_acceleration({x = x, y = 1.5, z = z})
                 else
-                    self.object:setacceleration({x = x, y = -14.5, z = z})
+                    self.object:set_acceleration({x = x, y = -14.5, z = z})
                 end
             else
                 if minetest.get_item_group(minetest.get_node(self.object:get_pos()).name, "water") ~= 0 then
-                    self.object:setacceleration({x = 0, y = 1.5, z = 0})
+                    self.object:set_acceleration({x = 0, y = 1.5, z = 0})
                 else
-                    self.object:setacceleration({x = 0, y = -14.5, z = 0})
+                    self.object:set_acceleration({x = 0, y = -14.5, z = 0})
                 end
             end
 			
@@ -359,7 +359,7 @@ function futuremobs:register_mob(name, def)
 						if p.x > s.x then
 							yaw = yaw+math.pi
 						end
-						self.object:setyaw(yaw)
+						self.object:set_yaw(yaw)
 						if dist > 2 then
 							if not self.v_start then
 								self.v_start = true
@@ -412,7 +412,7 @@ function futuremobs:register_mob(name, def)
 					else 
 						yaw = self.object:get_yaw()+((math.random(0,360)-180)/180*math.pi)
 					end
-					self.object:setyaw(yaw)
+					self.object:set_yaw(yaw)
 				end
 				self.set_velocity(self, 0)
 				self.set_animation(self, "stand")
@@ -423,7 +423,7 @@ function futuremobs:register_mob(name, def)
 				end
 			elseif self.state == "walk" then
 				if math.random(1, 100) <= 30 then
-					self.object:setyaw(self.object:get_yaw()+((math.random(0,360)-180)/180*math.pi))
+					self.object:set_yaw(self.object:get_yaw()+((math.random(0,360)-180)/180*math.pi))
 				end
 				if self.jump and self.get_velocity(self) <= 0.5 and self.object:get_velocity().y == 0 then
 					local v = self.object:get_velocity()
@@ -466,7 +466,7 @@ function futuremobs:register_mob(name, def)
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
-				self.object:setyaw(yaw)
+				self.object:set_yaw(yaw)
 				if self.attack.dist > 2 then
 					if not self.v_start then
 						self.v_start = true
@@ -543,7 +543,7 @@ function futuremobs:register_mob(name, def)
 				if p.x > s.x then
 					yaw = yaw+math.pi
 				end
-				self.object:setyaw(yaw)
+				self.object:set_yaw(yaw)
 				self.set_velocity(self, 0)
 				
 				if self.timer > self.shoot_interval and math.random(1, 100) <= 60 then
@@ -577,10 +577,10 @@ function futuremobs:register_mob(name, def)
 			self.object:set_hp( newHP )
 
 			self.object:set_armor_groups({fleshy=self.armor})
-			self.object:setacceleration({x=0, y=-10, z=0})
+			self.object:set_acceleration({x=0, y=-10, z=0})
 			self.state = "stand"
 			self.object:set_velocity({x=0, y=self.object:get_velocity().y, z=0})
-			self.object:setyaw(math.random(1, 360)/180*math.pi)
+			self.object:set_yaw(math.random(1, 360)/180*math.pi)
 			if self.type == "monster" and minetest.settings:get_bool("only_peaceful_futuremobs") then
 				self.object:remove()
 			end

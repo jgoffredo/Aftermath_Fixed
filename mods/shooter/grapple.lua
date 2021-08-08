@@ -2,7 +2,7 @@ local function throw_hook(itemstack, user, vel)
 	local inv = user:get_inventory()
 	local pos = user:get_pos()
 	local dir = user:get_look_dir()
-	local yaw = user:get_look_yaw()
+	local yaw = user:get_look_horizontal()
 	if pos and dir and yaw then
 		if not minetest.settings:get_bool("creative_mode") then
 			itemstack:add_wear(65535/100)
@@ -12,8 +12,8 @@ local function throw_hook(itemstack, user, vel)
 		if obj then
 			minetest.sound_play("shooter_throw", {object=obj})
 			obj:set_velocity({x=dir.x * vel, y=dir.y * vel, z=dir.z * vel})
-			obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
-			obj:setyaw(yaw + math.pi)
+			obj:set_acceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
+			obj:set_yaw(yaw + math.pi)
 			local ent = obj:get_luaentity()
 			if ent then
 				ent.player = ent.player or user
@@ -49,7 +49,7 @@ minetest.register_entity("shooter:hook", {
 			local node = minetest.get_node(below)
 			if node.name ~= "air" then
 				self.object:set_velocity({x=0, y=-10, z=0})
-				self.object:setacceleration({x=0, y=0, z=0})
+				self.object:set_acceleration({x=0, y=0, z=0})
 				if minetest.get_item_group(node.name, "liquid") == 0 and
 						minetest.get_node(pos).name == "air" then
 					self.player:moveto(pos)

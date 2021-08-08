@@ -28,8 +28,8 @@ end
 
 
 minetest.register_on_mapgen_init(function(mgparams)
-	minetest.set_mapgen_params({mgname="valleys"})
-	--minetest.set_mapgen_params({mgname="v7"})
+	minetest.set_mapgen_setting("mgname","valleys")
+	--minetest.set_mapgen_setting("mgname","v7")
 end)
 
 

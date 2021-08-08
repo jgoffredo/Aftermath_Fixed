@@ -1196,7 +1196,7 @@ local follow_flop = function(self)
 					yaw = yaw + pi
 				end
 
-				self.object:setyaw(yaw)
+				self.object:set_yaw(yaw)
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
@@ -1308,7 +1308,7 @@ local do_states = function(self, dtime)
 				yaw = (random(0, 360) - 180) / 180 * pi
 			end
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 		end
 
 		set_velocity(self, 0)
@@ -1363,14 +1363,14 @@ local do_states = function(self, dtime)
 				yaw = yaw + pi
 			end
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
 
 			local yaw = (random(0, 360) - 180) / 180 * pi
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 		end
 
 		-- stand for great fall in front
@@ -1462,7 +1462,7 @@ local do_states = function(self, dtime)
 				yaw = yaw + pi
 			end
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 
 			if dist > self.reach then
 
@@ -1637,7 +1637,7 @@ local do_states = function(self, dtime)
 				yaw = yaw + pi
 			end
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1750,7 +1750,7 @@ local do_states = function(self, dtime)
 				yaw = yaw + pi
 			end
 
-			self.object:setyaw(yaw)
+			self.object:set_yaw(yaw)
 
 			set_velocity(self, 0)
 
@@ -1806,7 +1806,7 @@ local falling = function(self, pos)
 	-- going up then apply gravity
 	if v.y > 0.1 then
 
-		self.object:setacceleration({
+		self.object:set_acceleration({
 			x = 0,
 			y = self.fall_speed,
 			z = 0
@@ -1818,7 +1818,7 @@ local falling = function(self, pos)
 
 		if self.floats == 1 then
 
-			self.object:setacceleration({
+			self.object:set_acceleration({
 				x = 0,
 				y = -self.fall_speed / (max(1, v.y) ^ 2),
 				z = 0
@@ -1826,7 +1826,7 @@ local falling = function(self, pos)
 		end
 	else
 		-- fall downwards
-		self.object:setacceleration({
+		self.object:set_acceleration({
 			x = 0,
 			y = self.fall_speed,
 			z = 0
@@ -2047,7 +2047,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			yaw = yaw + pi
 		end
 
-		self.object:setyaw(yaw)
+		self.object:set_yaw(yaw)
 		self.state = "runaway"
 		self.runaway_timer = 0
 		self.following = nil
@@ -2169,7 +2169,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	self.object:set_armor_groups({immortal = 1, fleshy = self.armor})
 	self.old_y = self.object:get_pos().y
 	self.old_health = self.health
-	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
+	self.object:set_yaw((random(0, 360) - 180) / 180 * pi)
 	self.sounds.distance = self.sounds.distance or 10
 	self.textures = textures
 	self.mesh = mesh
@@ -3183,7 +3183,7 @@ end
 				if pos.x > s.x then
 					yaw = yaw+math.pi
 				end
-				self.object:setyaw(yaw)
+				self.object:set_yaw(yaw)
 				return yaw
 			end
 

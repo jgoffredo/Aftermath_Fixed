@@ -187,7 +187,7 @@ local function rail_on_step(self, dtime)
 		self.old_vel = {x = 0, y = 0, z = 0}
 		self.old_pos = pos
 		self.object:set_velocity(vector.new())
-		self.object:setacceleration(vector.new())
+		self.object:set_acceleration(vector.new())
 		rail_on_step_event(get_railparams(pos).on_step, self, dtime)
 		return
 	end
@@ -293,7 +293,7 @@ local function rail_on_step(self, dtime)
 		end
 	end
 
-	self.object:setacceleration(new_acc)
+	self.object:set_acceleration(new_acc)
 	self.old_pos = vector.new(pos)
 	if not vector.equals(dir, {x=0, y=0, z=0}) then
 		self.old_dir = vector.new(dir)
@@ -331,7 +331,7 @@ local function rail_on_step(self, dtime)
 	elseif self.old_dir.z < 0 then
 		yaw = 1
 	end
-	self.object:setyaw(yaw * math.pi)
+	self.object:set_yaw(yaw * math.pi)
 
 	local anim = {x=0, y=0}
 	if dir.y == -1 then

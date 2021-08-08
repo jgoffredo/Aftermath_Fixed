@@ -138,15 +138,15 @@ function boat.on_step(self, dtime)
 		end
 		if ctrl.left then
 			if self.v < 0 then
-				self.object:setyaw(yaw - (1 + dtime) * 0.03)
+				self.object:set_yaw(yaw - (1 + dtime) * 0.03)
 			else
-				self.object:setyaw(yaw + (1 + dtime) * 0.03)
+				self.object:set_yaw(yaw + (1 + dtime) * 0.03)
 			end
 		elseif ctrl.right then
 			if self.v < 0 then
-				self.object:setyaw(yaw + (1 + dtime) * 0.03)
+				self.object:set_yaw(yaw + (1 + dtime) * 0.03)
 			else
-				self.object:setyaw(yaw - (1 + dtime) * 0.03)
+				self.object:set_yaw(yaw - (1 + dtime) * 0.03)
 			end
 		end
 	end
@@ -209,7 +209,7 @@ function boat.on_step(self, dtime)
 		end
 	end
 	self.object:set_velocity(new_velo)
-	self.object:setacceleration(new_acce)
+	self.object:set_acceleration(new_acce)
 end
 
 
@@ -243,7 +243,7 @@ minetest.register_craftitem("boats:boat", {
 		pointed_thing.under.y = pointed_thing.under.y + 0.5
 		boat = minetest.add_entity(pointed_thing.under, "boats:boat")
 		if boat then
-			boat:setyaw(placer:get_look_horizontal())
+			boat:set_yaw(placer:get_look_horizontal())
 			if not minetest.settings:get_bool("creative_mode") then
 				itemstack:take_item()
 			end

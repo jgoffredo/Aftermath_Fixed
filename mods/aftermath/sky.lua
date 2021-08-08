@@ -27,7 +27,8 @@ minetest.register_globalstep(function(dtime)
 	time = 0
 
 	local name = player:get_player_name()
-	local sky = player:get_attribute("skybox:skybox")--ADDED SKYBOX
+	--local sky = player:get_attribute("skybox:skybox")--ADDED SKYBOX
+	local sky = player:get_meta("skybox:skybox")--ADDED SKYBOX
 
 	       if minetest.get_player_by_name(name) then
 			--player:set_sky({}, "skybox", spaceskybox) -- Sets skybox

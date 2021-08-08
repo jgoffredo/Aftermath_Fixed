@@ -201,11 +201,11 @@ minetest.clear_registered_decorations()
 	end
 	
 	
-	local mg_params = minetest.get_mapgen_params()
-if mg_params.mgname == "v6" then
+	local mg_params = minetest.get_mapgen_setting("mg_name")
+if mg_params == "v6" then
 	
 	default.register_mgv6_decorations()
-elseif mg_params.mgname ~= "singlenode" then
+elseif mg_params ~= "singlenode" then
 
 	default.register_decorations()
 end

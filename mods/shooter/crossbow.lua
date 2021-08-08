@@ -59,7 +59,7 @@ minetest.register_entity("shooter:arrow_entity", {
 			collisionbox = {-1/8,-1/8,-1/8, 1/8,1/8,1/8},
 		})
 		self.object:set_velocity({x=0, y=0, z=0})
-		self.object:setacceleration(acceleration)
+		self.object:set_acceleration(acceleration)
 	end,
 	strike = function(self, object)
 		local puncher = self.player
@@ -185,7 +185,7 @@ for _, color in pairs(dye_basecolors) do
 			itemstack = "shooter:crossbow 1 "..itemstack:get_wear()
 			local pos = user:get_pos()
 			local dir = user:get_look_dir()
-			local yaw = user:get_look_yaw()
+			local yaw = user:get_look_horizontal()
 			if pos and dir and yaw then
 				pos.y = pos.y + 1.5
 				local obj = minetest.add_entity(pos, "shooter:arrow_entity")
@@ -202,7 +202,7 @@ for _, color in pairs(dye_basecolors) do
 					})
 					minetest.sound_play("shooter_throw", {object=obj}) 
 					local frame = get_animation_frame(dir)
-					obj:setyaw(yaw + math.pi)
+					obj:set_yaw(yaw + math.pi)
 					obj:set_animation({x=frame, y=frame}, 0)
 					obj:set_velocity({x=dir.x * 14, y=dir.y * 14, z=dir.z * 14})
 					if pointed_thing.type ~= "nothing" then
@@ -227,7 +227,7 @@ for _, color in pairs(dye_basecolors) do
 							return itemstack
 						end
 					end
-					obj:setacceleration({x=dir.x * -3, y=-5, z=dir.z * -3})
+					obj:set_acceleration({x=dir.x * -3, y=-5, z=dir.z * -3})
 				end
 			end
 			return itemstack

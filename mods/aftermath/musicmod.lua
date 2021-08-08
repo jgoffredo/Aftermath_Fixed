@@ -2,7 +2,8 @@ math.randomseed(3)
 sound_playing = 0
 
 minetest.register_globalstep(function(time)
-		local time = minetest.env:get_timeofday()
+		--local time = minetest.env:get_timeofday()
+		local time = minetest.get_timeofday()
 		--minetest.chat_send_all(time .. " " .. sound_playing)
 
 		if sound_playing == 0 then

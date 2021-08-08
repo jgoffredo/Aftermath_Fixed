@@ -58,15 +58,15 @@ minetest.register_tool("shooter:rocket_gun_loaded", {
 		end
 		local pos = user:get_pos()
 		local dir = user:get_look_dir()
-		local yaw = user:get_look_yaw()
+		local yaw = user:get_look_horizontal()
 		if pos and dir and yaw then
 			pos.y = pos.y + 1.5
 			local obj = minetest.add_entity(pos, "shooter:rocket_entity")
 			if obj then
 				minetest.sound_play("shooter_rocket_fire", {object=obj})
 				obj:set_velocity({x=dir.x * 20, y=dir.y * 20, z=dir.z * 20})
-				obj:setacceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
-				obj:setyaw(yaw + math.pi)
+				obj:set_acceleration({x=dir.x * -3, y=-10, z=dir.z * -3})
+				obj:set_yaw(yaw + math.pi)
 				local ent = obj:get_luaentity()
 				if ent then
 					ent.player = ent.player or user

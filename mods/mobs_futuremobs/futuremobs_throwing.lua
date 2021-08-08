@@ -12,8 +12,8 @@ local shoot_laser = function(itemstack, player)
 			local obj = minetest.env:add_entity({x=playerpos.x,y=playerpos.y+1.5,z=playerpos.z}, laser[2])
 			local dir = player:get_look_dir()
 			obj:set_velocity({x=dir.x*19, y=dir.y*19, z=dir.z*19})
-			obj:setacceleration({x=dir.x*-3, y=0, z=dir.z*-3})
-			obj:setyaw(player:get_look_yaw()+math.pi)
+			obj:set_acceleration({x=dir.x*-3, y=0, z=dir.z*-3})
+			obj:set_yaw(player:get_look_horizontal()+math.pi)
 			minetest.sound_play("laser_sound", {pos=playerpos})
 			if obj:get_luaentity().player == "" then
 				obj:get_luaentity().player = player

@@ -57,7 +57,7 @@ function vehicles.object_attach(entity, player, attach_at, visible, eye_offset)
 	minetest.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
 	end)
-	entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
+	entity.object:set_yaw(player:get_look_horizontal() - math.pi / 2)
 end
 
 function vehicles.object_detach(entity, player, offset)
@@ -157,7 +157,7 @@ function vehicles.object_drive(entity, dtime, def)
 	local dir = entity.driver:get_look_dir();
 	local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	local pos = entity.object:get_pos()
 	local node = minetest.get_node(pos).name
 	local accell = 1
@@ -237,17 +237,17 @@ function vehicles.object_drive(entity, dtime, def)
 	local entity_yaw = entity.object:get_yaw()
 	local change_yaw = (((target_yaw-entity_yaw+math.pi)%(math.pi*2))-math.pi)/16
 	if entity_yaw ~= target_yaw and not uses_arrow_keys then
-		entity.object:setyaw(entity_yaw+change_yaw)
+		entity.object:set_yaw(entity_yaw+change_yaw)
 		dir.x = -math.sin(entity_yaw)
 		dir.z = math.cos(entity_yaw)
 	else
 		--minetest.chat_send_all("yaw:"..entity_yaw)
 		--minetest.chat_send_all("dirx: "..dir.x.." dirz:"..dir.z)
 		if ctrl.left then
-			entity.object:setyaw(entity_yaw+(math.pi/360)*absolute_speed/2)
+			entity.object:set_yaw(entity_yaw+(math.pi/360)*absolute_speed/2)
 		end
 		if ctrl.right then
-			entity.object:setyaw(entity_yaw-(math.pi/360)*absolute_speed/2)
+			entity.object:set_yaw(entity_yaw-(math.pi/360)*absolute_speed/2)
 		end
 		dir.x = -math.sin(entity_yaw)
 		dir.z = math.cos(entity_yaw)
@@ -415,7 +415,7 @@ function vehicles.object_drive(entity, dtime, def)
 			entity.loaded = false
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*14,y=dir.y*14+shoot_angle,z=dir.z*14}
-			obj:setyaw(yaw+math.pi/2+extra_yaw)
+			obj:set_yaw(yaw+math.pi/2+extra_yaw)
 			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -439,7 +439,7 @@ function vehicles.object_drive(entity, dtime, def)
 			entity.loaded2 = false
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y2+dir.y,z=pos.z+0+dir.z*2}, arrow2)
 			local vec = {x=dir.x*20,y=dir.y*20+shoot_angle,z=dir.z*20}
-			obj:setyaw(yaw+math.pi/2+extra_yaw)
+			obj:set_yaw(yaw+math.pi/2+extra_yaw)
 			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -518,8 +518,8 @@ function vehicles.object_drive_simple(entity, dtime, speed, decell)
 	local vec_forward = {x=dir.x*speed,y=velo.y+1*-2,z=dir.z*speed}
 	local vec_backward = {x=-dir.x*speed,y=velo.y+1*-2,z=-dir.z*speed}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+	local yaw = entity.driver:get_look_horizontal();
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 	if ctrl.up then
 		entity.object:set_velocity(vec_forward)
 	elseif ctrl.down then
@@ -534,16 +534,16 @@ function vehicles.object_glide(entity, dtime, speed, decell, gravity, moving_ani
 	local dir = entity.driver:get_look_dir();
 	local velo = entity.object:get_velocity();
 	local vec_glide = {x=dir.x*speed*decell, y=velo.y, z=dir.z*speed*decell}
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	if not ctrl.sneak then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_glide)
-		entity.object:setacceleration({x=0, y=gravity, z=0})
+		entity.object:set_acceleration({x=0, y=gravity, z=0})
 	end
 	if ctrl.sneak then
 			local vec = {x=0,y=gravity*15,z=0}
-			local yaw = entity.driver:get_look_yaw();
-			entity.object:setyaw(yaw+math.pi+math.pi/2)
+			local yaw = entity.driver:get_look_horizontal();
+			entity.object:set_yaw(yaw+math.pi+math.pi/2)
 			entity.object:set_velocity(vec)
 	end
 	if velo.y == 0 then

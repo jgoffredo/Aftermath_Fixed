@@ -63,7 +63,7 @@ function object_attach(entity, player, attach_at, visible, eye_offset)
 	minetest.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
 	end)
-	entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
+	entity.object:set_yaw(player:get_look_horizontal() - math.pi / 2)
 end
 
 function object_detach(entity, player, offset)
@@ -117,7 +117,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	--local vec_forward = {x=dir.x*speed,y=velo.y+1*-2,z=dir.z*speed}
 	local vec_backward = {x=-dir.x*speed/4,y=velo.y+1*-2,z=-dir.z*speed/4}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	--timer
 	local absolute_speed = math.sqrt(math.pow(velo.x, 2)+math.pow(velo.z, 2))
 	if absolute_speed <= speed and ctrl.up then
@@ -138,7 +138,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
 		entity.object:set_velocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	elseif ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_forward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
@@ -146,7 +146,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 		entity.moving = true
 	end
 	elseif ctrl.down then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_backward)
 	--lib_mount animation
 	if moving_anim ~= nil and not entity.moving and not hovering then
@@ -154,7 +154,7 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 		entity.moving = true
 	end
 	elseif not ctrl.down or ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_stop)
 	--lib_mount animation
 	if moving_anim ~= nil and entity.moving and not hovering then
@@ -171,8 +171,8 @@ function object_drive(entity, dtime, speed, decell, shoots, arrow, reload, movin
 			local pos = entity.object:get_pos()
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+shoot_y+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*14,y=dir.y*14,z=dir.z*14}
-			local yaw = entity.driver:get_look_yaw();
-			obj:setyaw(yaw+math.pi/2)
+			local yaw = entity.driver:get_look_horizontal();
+			obj:set_yaw(yaw+math.pi/2)
 			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -239,8 +239,8 @@ function object_drive_simple(entity, dtime, speed, decell)
 	local vec_forward = {x=dir.x*speed,y=velo.y+1*-2,z=dir.z*speed}
 	local vec_backward = {x=-dir.x*speed,y=velo.y+1*-2,z=-dir.z*speed}
 	local vec_stop = {x=velo.x*decell,y=velo.y+1*-2,z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+	local yaw = entity.driver:get_look_horizontal();
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 	if ctrl.up then
 		entity.object:set_velocity(vec_forward)
 	elseif ctrl.down then
@@ -283,9 +283,9 @@ function object_drive_car(entity, dtime, speed, decell, nitro_duration, move_ani
 	local vec_stop = {x=velo.x*decell,y=velo.y-1,z=velo.z*decell}
 	
 	--face the right way
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	--if ctrl.up or ctrl.down then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 	--end
 	if not entity.nitro then
 		minetest.after(4, function()
@@ -367,8 +367,8 @@ function object_float(entity, dtime, speed, decell)
 	local vec_forward = {x=dir.x*speed,y=velo.y,z=dir.z*speed}
 	local vec_backward = {x=-dir.x*speed,y=velo.y,z=-dir.z*speed}
 	local vec_stop = {x=velo.x*decell,y=velo.y,z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
-	entity.object:setyaw(yaw+math.pi+math.pi/2)
+	local yaw = entity.driver:get_look_horizontal();
+	entity.object:set_yaw(yaw+math.pi+math.pi/2)
 	if minetest.get_node(pos).name == "default:river_water_source" or minetest.get_node(pos).name == "default:water_source" then
 	entity.floating = true
 	else entity.floating = false
@@ -388,8 +388,8 @@ end
 --stationary object, useful for gun turrets etc.
 function object_turret(entity, dtime, height, arrow, shoot_interval)
 	local ctrl = entity.driver:get_player_control()
-	local yaw = entity.driver:get_look_yaw();
-	entity.object:setyaw(yaw+math.pi+math.pi/2)
+	local yaw = entity.driver:get_look_horizontal();
+	entity.object:set_yaw(yaw+math.pi+math.pi/2)
 	if ctrl.sneak and entity.loaded then
 	local pname = entity.driver:get_player_name();
 			local inv = minetest.get_inventory({type="player", name=pname});
@@ -399,9 +399,9 @@ function object_turret(entity, dtime, height, arrow, shoot_interval)
 			local pos = entity.object:get_pos()
 			local dir = entity.driver:get_look_dir();
 			local obj = minetest.env:add_entity({x=pos.x+dir.x*1.2,y=pos.y+height,z=pos.z+dir.z*1.2}, arrow)
-			local yaw = entity.driver:get_look_yaw();
+			local yaw = entity.driver:get_look_horizontal();
 			local vec = {x=dir.x*12, y=dir.y*12, z=dir.z*12}
-			obj:setyaw(yaw+math.pi/2)
+			obj:set_yaw(yaw+math.pi/2)
 			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -424,7 +424,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	--local vec_backward = {x=-dir.x*speed,y=dir.y*speed+3,z=-dir.z*speed}
 	--local acc_backward = {x=dir.x*accel/2,y=dir.y*accel/2+3,z=dir.z*accel/2}
 	local vec_stop = {x=velo.x*decell, y=velo.y, z=velo.z*decell}
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	--pitch doesn't work/exist
 	--local pitch = entity.driver:get_look_pitch();
 	
@@ -445,15 +445,15 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 	if node == "default:water_source" or node == "default:river_water_source" or node == "default:river_water_flowing" or node == "default:water_flowing" then
 		entity.object:set_velocity({x=velo.x*0.9, y=-1, z=velo.z*0.9})
 	elseif ctrl.up then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		--entity.object:setpitch(pitch+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_forward)
-		entity.object:setacceleration(acc_forward)
+		entity.object:set_acceleration(acc_forward)
 	--elseif ctrl.down then
-		--entity.object:setyaw(yaw+math.pi+math.pi/2)
+		--entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		--entity.object:setpitch(pitch+math.pi+math.pi/2)
 		--entity.object:set_velocity(vec_backward)
-		--entity.object:setacceleration(acc_backward)
+		--entity.object:set_acceleration(acc_backward)
 		
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
@@ -461,7 +461,7 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 		entity.moving = true
 	end
 	elseif ctrl.jump and mode2 == "rise" then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_rise)
 		--lib_mount animation
 	if moving_anim ~= nil and not entity.moving then
@@ -469,9 +469,9 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 		entity.moving = true
 	end
 	elseif not ctrl.up and not ctrl.jump then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_stop)
-		entity.object:setacceleration({x=0, y=-4.5, z=0})
+		entity.object:set_acceleration({x=0, y=-4.5, z=0})
 		--lib_mount animation
 	if stand_anim ~= nil and entity.moving then
 		entity.object:set_animation(stand_anim, 20, 0)
@@ -492,8 +492,8 @@ function object_fly(entity, dtime, speed, accel, decell, shoots, arrow, reload, 
 			local pos = entity.object:get_pos()
 			local obj = minetest.env:add_entity({x=pos.x+0+dir.x*2,y=pos.y+1.5+dir.y,z=pos.z+0+dir.z*2}, arrow)
 			local vec = {x=dir.x*9,y=dir.y*9,z=dir.z*9}
-			local yaw = entity.driver:get_look_yaw();
-			obj:setyaw(yaw+math.pi/2)
+			local yaw = entity.driver:get_look_horizontal();
+			obj:set_yaw(yaw+math.pi/2)
 			obj:set_velocity(vec)
 			local object = obj:get_luaentity()
 			object.launcher = entity.driver
@@ -510,16 +510,16 @@ function object_glide(entity, dtime, speed, decell, gravity, moving_anim, stand_
 	local dir = entity.driver:get_look_dir();
 	local velo = entity.object:get_velocity();
 	local vec_glide = {x=dir.x*speed*decell, y=velo.y, z=dir.z*speed*decell}
-	local yaw = entity.driver:get_look_yaw();
+	local yaw = entity.driver:get_look_horizontal();
 	if not ctrl.sneak then
-		entity.object:setyaw(yaw+math.pi+math.pi/2)
+		entity.object:set_yaw(yaw+math.pi+math.pi/2)
 		entity.object:set_velocity(vec_glide)
-		entity.object:setacceleration({x=0, y=gravity, z=0})
+		entity.object:set_acceleration({x=0, y=gravity, z=0})
 	end
 	if ctrl.sneak then
 			local vec = {x=0,y=gravity*15,z=0}
-			local yaw = entity.driver:get_look_yaw();
-			entity.object:setyaw(yaw+math.pi+math.pi/2)
+			local yaw = entity.driver:get_look_horizontal();
+			entity.object:set_yaw(yaw+math.pi+math.pi/2)
 			entity.object:set_velocity(vec)
 	end
 	if velo.y == 0 then
@@ -593,7 +593,7 @@ end
 	-- minetest.after(0.2, function()
 		-- default.player_set_animation(player, "sit" , 30)
 	-- end)
-	-- entity.object:setyaw(player:get_look_yaw() - math.pi / 2)
+	-- entity.object:set_yaw(player:get_look_horizontal() - math.pi / 2)
 -- end
 
 -- function lib_mount.detach(entity, player, offset)
@@ -621,15 +621,15 @@ end
 	-- end
 	-- if ctrl.left then
 		-- if entity.v < 0 then
-			-- entity.object:setyaw(yaw - (1 + dtime) * 0.03)
+			-- entity.object:set_yaw(yaw - (1 + dtime) * 0.03)
 		-- else
-			-- entity.object:setyaw(yaw + (1 + dtime) * 0.03)
+			-- entity.object:set_yaw(yaw + (1 + dtime) * 0.03)
 		-- end
 	-- elseif ctrl.right then
 		-- if entity.v < 0 then
-			-- entity.object:setyaw(yaw + (1 + dtime) * 0.03)
+			-- entity.object:set_yaw(yaw + (1 + dtime) * 0.03)
 		-- else
-			-- entity.object:setyaw(yaw - (1 + dtime) * 0.03)
+			-- entity.object:set_yaw(yaw - (1 + dtime) * 0.03)
 		-- end
 	-- end
 	
@@ -701,7 +701,7 @@ end
 		-- new_velo.y = new_velo.y + 0.75
 	-- end
 	-- entity.object:set_velocity(new_velo)
-	-- entity.object:setacceleration(new_acce)
+	-- entity.object:set_acceleration(new_acce)
 -- end
 
 --other stuff

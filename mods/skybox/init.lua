@@ -58,7 +58,7 @@ end
 --
 
 minetest.register_on_joinplayer(function(player)
-	local sky = player:get_attribute("skybox:skybox")
+	local sky = player:get_meta("skybox:skybox")
 	print(dump(sky))
 	if not sky or sky == "" then
 		skybox.clear(player)
