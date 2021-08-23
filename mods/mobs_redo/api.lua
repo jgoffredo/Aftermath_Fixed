@@ -380,7 +380,6 @@ function check_for_death(self)
 	-- play death sound
 	if self.sounds.death then
 
-		print("Teste JGoffredo Morrendo")
 		minetest.sound_play(self.sounds.death, {
 			object = self.object,
 			gain = 1.0,
@@ -391,7 +390,6 @@ function check_for_death(self)
 	-- execute custom death function
 	if self.on_die then
 
-		print("Teste JGoffredo self.on_die")
 		self.on_die(self, pos)
 
 		-- JGoffredo: Can not remove yet, if enable_mob_bones is on.
@@ -401,7 +399,6 @@ function check_for_death(self)
 
 		return true
 	end
-	print("Teste JGoffredo Morrendo 2")
 
 	-- default death function
 	-- JGoffredo: Can not remove yet, if enable_mob_bones is on.
@@ -2045,7 +2042,6 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 					
 				print ("Clown down ")
 			else
-				print("Teste JGoffredo Just Removing.")
 				-- JGoffredo. Here can just remove.
 				self.object:remove()
 			end

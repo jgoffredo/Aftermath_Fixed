@@ -2,22 +2,25 @@
 village_gambit = {}
 
 village_gambit.replacements_gambit = function( housetype, pr, replacements )
-      -- replace the wood - those are lumberjacks after all
-      local wood_type = mg_villages.replace_materials( replacements, pr,
+	-- replace the wood - those are lumberjacks after all
+	local wood_type = mg_villages.replace_materials( replacements, pr,
 		{'default:wood'},
 		{''},
 		{ 'default:wood', 'default:junglewood', 'mg:savannawood', 'mg:pinewood' },
 		'default:wood');
-      mg_villages.replace_tree_trunk( replacements, wood_type );
-      mg_villages.replace_saplings(   replacements, wood_type );
+	--
+	-- JGoffredo in 2021-08-23. This function does not exists anymore.
+	--mg_villages.replace_tree_trunk( replacements, wood_type );
+	-- JGoffredo in 2021-08-23. This function does not exists anymore.
+	--mg_villages.replace_saplings(   replacements, wood_type );
 
-      mg_villages.replace_materials( replacements, pr,
+	mg_villages.replace_materials( replacements, pr,
 		{'stairs:stair_cobble',  'stairs:slab_cobble', 'default:cobble'},
 		{'stairs:stair_',         'stairs:slab_',      'default:'     },
 		{'stonebrick', 'desert_stonebrick','sandstonebrick', 'sandstone','stone','desert_stone','stone_flat','desert_stone_flat','stone_bricks','desert_strone_bricks'},
 		'stonebrick');
 
-      return replacements;
+	return replacements;
 end
 
 -- add a new village type for all those buildings

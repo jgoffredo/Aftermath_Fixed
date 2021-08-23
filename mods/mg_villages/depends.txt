@@ -1,5 +1,5 @@
 handle_schematics
-default
+default?
 doors?
 farming?
 wool?
@@ -20,3 +20,12 @@ grounds?
 moreblocks?
 bell?
 mg?
+intllib?
+mob_world_interaction?
+cavestuff?
+mcl_biomes?
+tsm_railcorridors?
+mcl_strongholds?
+mcl_strongholds?
+mcl_dungeons?
+mcl_mapgen_core?

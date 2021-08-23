@@ -2,14 +2,17 @@
 village_modern_houses = {}
 
 village_modern_houses.replacements_modern_housees = function( housetype, pr, replacements )
-      -- replace the wood - even though those houses use only a limited amount of wood
-      local wood_type = mg_villages.replace_materials( replacements, pr,
+-- replace the wood - even though those houses use only a limited amount of wood
+	local wood_type = mg_villages.replace_materials( replacements, pr,
 		{'default:wood'},
 		{''},
 		{ 'default:wood', 'default:junglewood', 'mg:savannawood', 'mg:pinewood' },
 		'default:wood');
-      mg_villages.replace_tree_trunk( replacements, wood_type );
-      mg_villages.replace_saplings(   replacements, wood_type );
+	-- JGoffredo in 2021-08-23. This function does not exists anymore.
+	--mg_villages.replace_tree_trunk( replacements, wood_type );
+	-- JGoffredo in 2021-08-23. This function does not exists anymore.
+	--mg_villages.replace_saplings(   replacements, wood_type );
+
 	return replacements;
 end
 

@@ -1,12 +1,20 @@
-
 -- reserve namespace for the villages
 mg_villages = {}
+
+-- Intllib
+local S
+if minetest.get_modpath("intllib") then
+	S = intllib.Getter()
+else
+	S = function(s) return s end
+end
+mg_villages.intllib = S
 
 mg_villages.all_villages  = {}
 mg_villages.mg_generated_map = {}
 mg_villages.anz_villages = 0;
 
-mg_villages.modpath = minetest.get_modpath( "mg_villages");
+mg_villages.modpath = minetest.get_modpath("mg_villages");
 
 
 mg_villages.DEBUG_LEVEL_NONE    = -1 -- -1: disable all printed messages
@@ -32,15 +40,32 @@ dofile(mg_villages.modpath.."/config.lua")
 -- adds a special gravel node which will neither fall nor be griefed by mapgen
 dofile(mg_villages.modpath.."/nodes.lua")
 
+
 -- the default game no longer provides helpful tree growing code
+-- (but some mods may not have the default tree, jungletree and pinetree)
+if(minetest.registered_nodes["default:sapling"]) then
+       dofile(mg_villages.modpath.."/trees_default.lua")
+end
+-- RealTest has its own tree growing code
+if(minetest.registered_nodes["trees:maple_sapling"]) then
+       dofile(mg_villages.modpath.."/trees_realtest.lua")
+end
+-- general tree growing (used by mapgen.lua)
 dofile(mg_villages.modpath.."/trees.lua")
 
+
 dofile(mg_villages.modpath.."/replacements.lua")
+
+-- fill mg_villages.all_buildings_list with precalculated paths
+dofile(mg_villages.modpath.."/mg_villages_path_info.data");
 
 -- multiple diffrent village types with their own sets of houses are supported
 -- The function mg_villages.add_village_type( village_type_name, village_type_data )
 --   allows other mods to add new village types.
 dofile(mg_villages.modpath.."/village_types.lua")
+
+-- calls path calculation and stores front doors etc.; only called in mg_villages.add_building
+dofile(mg_villages.modpath.."/analyze_building_for_mobs.lua")
 
 -- Note: the "buildings" talbe is not in the mg_villages.* namespace
 -- The function mg_villages.add_building( building_data ) allows other mods to add buildings.
@@ -55,21 +80,31 @@ dofile(mg_villages.modpath.."/name_gen.lua");
 
 dofile(mg_villages.modpath.."/villages.lua")
 
+-- determine type of work, name, age, bed position etc. for villagers (none included!)
+dofile(mg_villages.modpath.."/inhabitants.lua")
+
+-- provides some extra functionality for development of mob mods etc.;
+-- contains some deprecated functions
+dofile(mg_villages.modpath.."/extras_for_development.lua");
 -- adds a command that allows to teleport to a known village
 dofile(mg_villages.modpath.."/chat_commands.lua")
 -- protect villages from griefing
 dofile(mg_villages.modpath.."/protection.lua")
+-- allows to buy/sell/restore/.. plots and their buildings
+dofile(mg_villages.modpath.."/plotmarker_formspec.lua")
 -- create and show a map of the world
 dofile(mg_villages.modpath.."/map_of_world.lua")
 
-dofile(mg_villages.modpath.."/fill_chest.lua")
+-- grow some plants and farmland around the village
+dofile(mg_villages.modpath.."/village_area_fill_with_plants.lua")
 
 -- terrain blending for individual houses
 dofile(mg_villages.modpath.."/terrain_blend.lua")
--- highlandpools
-dofile(mg_villages.modpath.."/highlandpools.lua")
 -- the interface for the mapgen;
 -- also takes care of spawning the player
 dofile(mg_villages.modpath.."/mapgen.lua")
 
 dofile(mg_villages.modpath.."/spawn_player.lua")
+
+-- reconstruct the connection of the roads inside a village
+dofile(mg_villages.modpath.."/roads.lua")

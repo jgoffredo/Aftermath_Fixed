@@ -5,12 +5,12 @@ build_chest.preview_image_draw_tile = function( content_id, image, x, z, dx, dz,
 		if( not( node_name )) then
 			return '';
 		end
-		local node_def  = minetest.registered_nodes[ node_name ];
+		local node_def  = handle_schematics.node_defined( node_name );
 		if( not( node_def )) then
 			return '';
 		end
 		local tiles = node_def.tiles;
-		if( not( tiles )) then
+		if( not( tiles ) and node_def.tile_images) then
 			tiles = node_def.tile_images;
 		end
 		local tile = nil;
@@ -59,7 +59,7 @@ build_chest.preview_image_create_one_view = function( data, side )
 			local z = params[4];
 			local target_x = x;
 			if( params[8]==1 ) then
-				target_x = math.max( params[1],params[2] )- x;
+				target_x = math.max( params[1],params[2] )- x+1;
 			end
 			while( not( found ) and z~= params[5]) do
 				local node = -1;
@@ -89,7 +89,7 @@ build_chest.preview_image_create_one_view = function( data, side )
 end
 
 -- internal function
-build_chest.preview_image_create_view_from_top = function( data )
+build_chest.preview_image_create_view_from_top = function( data, y_top )
 	-- no view from top if the image is too big
 	if( data.size.z * data.size.y > 2500 ) then
 		return nil;
@@ -100,8 +100,8 @@ build_chest.preview_image_create_view_from_top = function( data )
 		preview[ z ] = {};
 		for x = 1, data.size.x do
 			local found = nil;
-			local y = data.size.y;
-			while( not( found ) and y > 1) do
+			local y = y_top;
+			while( not( found ) and y > 0) do
 				local node = data.scm_data_cache[y][x][z];
 				if( node and node[1]
 				   and data.nodenames[ node[1] ]
@@ -132,7 +132,7 @@ build_chest.preview_image_formspec = function( building_name, replacements, side
 		return "";
 	end
 
-	local side_names = {"front","right","back","left","top"};
+	local side_names = {"front","right","back","left","top","floor"};
 	local side = 1;
 	for i,v in ipairs( side_names ) do
 		if( side_name and side_name==v ) then
@@ -141,7 +141,7 @@ build_chest.preview_image_formspec = function( building_name, replacements, side
 	end
 
 	local formspec = "";
-	for i=1,5 do
+	for i=1,#side_names do
 		if( i ~= side ) then
 			formspec = formspec.."button["..tostring(3.3+1.2*(i-1))..
 				",2.2;1,0.5;preview;"..side_names[i].."]";
@@ -159,13 +159,13 @@ build_chest.preview_image_formspec = function( building_name, replacements, side
 		for j,w in ipairs( replacements ) do
 			if( w and w[1] and w[1]==v) then
 				found        = true;
-				if( minetest.registered_nodes[ w[2]] ) then
+				if( handle_schematics.node_defined( w[2] )) then
 					content_ids[ i ] = minetest.get_content_id( w[2] );
 				end
 			end
 		end
 		if( not( found )) then
-			if( minetest.registered_nodes[ v ]) then
+			if( handle_schematics.node_defined( v )) then
 				content_ids[ i ] = minetest.get_content_id( v );
 			elseif( v ~= 'air' ) then
 				content_ids[ i ] = -1;
@@ -175,8 +175,8 @@ build_chest.preview_image_formspec = function( building_name, replacements, side
 
 	local scale = 0.5;
 
-	local tile_nr = 3; -- view from the side
-	if( side ~= 5 ) then
+	local tile_nr = 6; -- view that works best with roofs and the like
+	if( side ~= 5 and side ~= 6) then
 		local scale_y = 6.0/data.size.y;
 		local scale_z = 10.0/data.size.z;
 		if( scale_y > scale_z) then
@@ -228,17 +228,19 @@ build_chest.preview_image_create_views = function( res, orients )
 			build_chest.preview_image_create_one_view( res, 3 )};
 
 	-- the building might be stored in rotated form
-	if( orients and #orients and orients[1] ) then
-		if(     orients[1]==1 ) then
+	if( res and res.rotated) then
+		if(     res.rotated and res.rotated==90) then
 			preview = {preview[2],preview[3],preview[4],preview[1]};
-		elseif( orients[1]==2 ) then
+		elseif( res.rotated and res.rotated==180) then
 			preview = {preview[3],preview[4],preview[1],preview[2]};
-		elseif( orients[1]==3 ) then
+		elseif( res.rotated and res.rotated==270) then
 			preview = {preview[4],preview[1],preview[2],preview[3]};
 		end
 	end
 	-- ...and add a preview image from top
-	preview[5] = build_chest.preview_image_create_view_from_top( res );
+	preview[5] = build_chest.preview_image_create_view_from_top( res, res.size.y );
+	-- add the floor plan (the node at ground level and the node one above ground level are of intrest)
+	preview[6] = build_chest.preview_image_create_view_from_top( res,  math.min(2-res.yoff, res.size.y));
 	return preview;
 end
 

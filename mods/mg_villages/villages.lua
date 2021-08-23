@@ -3,6 +3,11 @@
 -- how the buildings are rotated, where the roads will be, which replacement materials
 -- will be used etc.
 
+local calls;
+
+-- Intllib
+local S = mg_villages.intllib
+
 local function is_village_block(minp)
 	local x, z = math.floor(minp.x/80), math.floor(minp.z/80)
 	local vcc = mg_villages.VILLAGE_CHECK_COUNT
@@ -22,7 +27,7 @@ mg_villages.villages_at_point = function(minp, noise1)
 			local s = pi:next(1, 400)
 			local x = pi:next(mp.x, mp.x + 79)
 			local z = pi:next(mp.z, mp.z + 79)
-			if s <= mg_villages.VILLAGE_CHANCE and noise1:get2d({x = x, y = z}) >= -0.3 then return {} end
+			if s <= mg_villages.VILLAGE_CHANCE and noise1:get_2d({x = x, y = z}) >= -0.3 then return {} end
 		end
 	end
 	end
@@ -30,7 +35,7 @@ mg_villages.villages_at_point = function(minp, noise1)
 	if pr:next(1, 400) > mg_villages.VILLAGE_CHANCE then return {} end -- No village here
 	local x = pr:next(minp.x, minp.x + 79)
 	local z = pr:next(minp.z, minp.z + 79)
-	if noise1:get2d({x = x, y = z}) < -0.3 then return {} end -- Deep in the ocean
+	if noise1:get_2d({x = x, y = z}) < -0.3 then return {} end -- Deep in the ocean
 
 	-- fallback: type "nore" (that is what the mod originally came with)
 	local village_type = 'nore';
@@ -80,7 +85,7 @@ local function choose_building(l, pr, village_type)
 		
 		if(  not( mg_villages.village_type_data[ village_type ] )
 		  or not( mg_villages.village_type_data[ village_type ][ 'building_list'] )) then
-			mg_villages.print( mg_villages.DEBUG_LEVEL_INFO, 'Unsupported village type: '..tostring( village_type )..' for house at '..tostring(bx)..':'..tostring(bz)..'.');
+			mg_villages.print( mg_villages.DEBUG_LEVEL_INFO, S("Unsupported village type").." : "..tostring( village_type )); --..' '..S("for house at") ' '..tostring(bx)..':'..tostring(bz)..'.');
 			-- ...and crash in the next few lines (because there is no real solution for this problem)
 		end
 
@@ -160,6 +165,23 @@ local function choose_building_rot(l, pr, orient, village_type)
 	return btype, rotation, bsizex, bsizez, mirror
 end
 
+
+-- choose_building_rot is not public, thus cannot be used by other mods;
+-- also, that functions return values are impractical for other mods;
+-- Returns: Array that is a new entry for array l (list of buildings in the village)
+-- Parameters:
+--   l             array consisting of previous return values of this function here
+--   pos           pos.x, pos.y, pos.z will be part of the returned data structure
+--   pr            instance of PseudoRandom(..)
+--   orient        desired orientation
+--   village_type  type of the desired village (i.e. medieval, taoki, ...)
+mg_villages.choose_building_rotated = function(l, pos, pr, orient, village_type)
+	local btype, rotation, bsizex, bsizez, mirror = choose_building_rot(l, pr, orient, village_type)
+	-- road_nr and side have no relevance for other mods
+	return	{x=pos.x, y=pos.y, z=pos.z, btype=btype, bsizex=bsizex, bsizez=bsizez, brotate = rotation, road_nr = 1, side=1, o=orient, mirror=mirror }
+end
+
+
 local function placeable(bx, bz, bsizex, bsizez, l, exclude_roads, orientation)
 	for _, a in ipairs(l) do
 		-- with < instead of <=, space_between_buildings can be zero (important for towns where houses are closely packed)
@@ -187,7 +209,7 @@ end
 
 mg_villages.road_nr = 0;
 
-local function generate_road(village, l, pr, roadsize_list, road_materials, rx, rz, rdx, rdz, vnoise, space_between_buildings, iteration_depth)
+local function generate_road(village, l, pr, roadsize_list, road_materials, rx, rz, rdx, rdz, vnoise, space_between_buildings, iteration_depth, parent_road)
 	local roadsize = math.floor(roadsize_list[ iteration_depth ]/2);
 	if( not( roadsize ) or roadsize==0) then
 		roadsize = mg_villages.FIRST_ROADSIZE;
@@ -224,7 +246,7 @@ local function generate_road(village, l, pr, roadsize_list, road_materials, rx, 
 	while mg_villages.inside_village(rx, rz, village, vnoise) and not road_in_building(rx, rz, rdx, rdz, roadsize_a, l) do
 		if iteration_depth > 1 and pr:next(1, 4) == 1 and first_building_a then
 			--generate_road(vx, vz, vs, vh, l, pr, roadsize-1, rx, rz, math.abs(rdz), math.abs(rdx))
-			calls_to_do[#calls_to_do+1] = {rx=rx+(roadsize_a - 0)*rdx, rz=rz+(roadsize_a - 0)*rdz, rdx=math.abs(rdz), rdz=math.abs(rdx)}
+			calls_to_do[#calls_to_do+1] = {rx=rx+(roadsize_a - 0)*rdx, rz=rz+(roadsize_a - 0)*rdz, rdx=math.abs(rdz), rdz=math.abs(rdx), parent_road = mg_villages.road_nr }
 			m2x = rx + (roadsize_a - 0)*rdx
 			m2z = rz + (roadsize_a - 0)*rdz
 			rx = rx + (2*roadsize_a - 0)*rdx
@@ -274,7 +296,7 @@ local function generate_road(village, l, pr, roadsize_list, road_materials, rx, 
 	while mg_villages.inside_village(rx, rz, village, vnoise) and not road_in_building(rx, rz, rdx, rdz, roadsize_b, l) do
 		if roadsize_b > 1 and pr:next(1, 4) == 1 and first_building_b then
 			--generate_road(vx, vz, vs, vh, l, pr, roadsize-1, rx, rz, -math.abs(rdz), -math.abs(rdx))
-			calls_to_do[#calls_to_do+1] = {rx=rx+(roadsize_b - 0)*rdx, rz=rz+(roadsize_b - 0)*rdz, rdx=-math.abs(rdz), rdz=-math.abs(rdx)}
+			calls_to_do[#calls_to_do+1] = {rx=rx+(roadsize_b - 0)*rdx, rz=rz+(roadsize_b - 0)*rdz, rdx=-math.abs(rdz), rdz=-math.abs(rdx), parent_road = mg_villages.road_nr }
 			m2x = rx + (roadsize_b - 0)*rdx
 			m2z = rz + (roadsize_b - 0)*rdz
 			rx = rx + (2*roadsize_b - 0)*rdx
@@ -380,7 +402,7 @@ local function generate_road(village, l, pr, roadsize_list, road_materials, rx, 
 		end
 
 		--generate_road(vx, vz, vs, vh, l, pr, new_roadsize, i.rx, i.rz, i.rdx, i.rdz, vnoise)
-		calls[calls.index] = {village, l, pr, roadsize_list, road_materials, i.rx, i.rz, i.rdx, i.rdz, vnoise, space_between_buildings, iteration_depth-1}
+		calls[calls.index] = {village, l, pr, roadsize_list, road_materials, i.rx, i.rz, i.rdx, i.rdz, vnoise, space_between_buildings, iteration_depth-1, i.parent_road}
 		calls.index = calls.index+1
 	end
 end
@@ -462,7 +484,8 @@ local function generate_bpos(village, pr, vnoise, space_between_buildings)
 	if( mg_villages.village_type_data[ village.village_type ].roadsize_list ) then
 		roadsize_list = mg_villages.village_type_data[ village.village_type ].roadsize_list;
 	end
-	generate_road(village, l, pr, roadsize_list, mg_villages.village_type_data[ village.village_type ].road_materials, rx, rz, 1, 0, vnoise, space_between_buildings, #roadsize_list)
+	-- last 0 in parameter list: no parent road yet (this is the first)
+	generate_road(village, l, pr, roadsize_list, mg_villages.village_type_data[ village.village_type ].road_materials, rx, rz, 1, 0, vnoise, space_between_buildings, #roadsize_list, 0)
 	local i = 1
 	while i < calls.index do
 		generate_road(unpack(calls[i]))
@@ -601,7 +624,7 @@ end
 local function generate_walls(bpos, data, a, minp, maxp, vh, vx, vz, vs, vnoise)
 	for x = minp.x, maxp.x do
 	for z = minp.z, maxp.z do
-		local xx = (vnoise:get2d({x=x, y=z})-2)*20+(40/(vs*vs))*((x-vx)*(x-vx)+(z-vz)*(z-vz))
+		local xx = (vnoise:get_2d({x=x, y=z})-2)*20+(40/(vs*vs))*((x-vx)*(x-vx)+(z-vz)*(z-vz))
 		if xx>=40 and xx <= 44 then
 			bpos[#bpos+1] = {x=x, z=z, y=vh, btype="wall", bsizex=1, bsizez=1, brotate=0}
 		end
@@ -669,20 +692,20 @@ mg_villages.generate_village = function(village, vnoise)
 	-- if the village is new, replacement_list is nil and a new replacement list will be created
 	local replacements = mg_villages.get_replacement_table( village.village_type, p, nil );
 	
-	local sapling_id = mg_villages.get_content_id_replaced( 'default:sapling', replacements );
+	local sapling_id = handle_schematics.get_content_id_replaced( 'default:sapling', replacements );
 	-- 1/sapling_p = probability of a sapling beeing placed
 	local sapling_p  = 25;
 	if( mg_villages.sapling_probability[ sapling_id ] ) then
 		sapling_p = mg_villages.sapling_probability[ sapling_id ];
 	end
 
-	local c_plant = mg_villages.get_content_id_replaced( mg_villages.village_type_data[ village.village_type ].plant_type, replacements);
+	local c_plant = handle_schematics.get_content_id_replaced( mg_villages.village_type_data[ village.village_type ].plant_type, replacements);
 	local plantlist = {
 		{ id=sapling_id, p=sapling_p * mg_villages.village_type_data[ village.village_type ].sapling_divisor }, -- only few trees
 		{ id=c_plant,    p=            mg_villages.village_type_data[ village.village_type ].plant_frequency }};
 
 	if( village.is_single_house and plantlist and #plantlist>0 ) then
-		local c_grass = mg_villages.get_content_id_replaced( 'default:grass_5', replacements);
+		local c_grass = handle_schematics.get_content_id_replaced( 'default:grass_5', replacements);
 		plantlist[2] = { id=c_grass,    p=10        };
 		-- reduce the amount of plants grown so that the area stands out less from the sourroundings
 		plantlist[2].p = plantlist[2].p*3;
@@ -907,13 +930,13 @@ mg_villages.houses_in_mapchunk = function( minp, mapchunk_size, villages )
 	local d = math.ceil( mapchunk_size / 2 );
 	for _,candidate in ipairs(village_candidates) do
 		if( not( candidate.areas_intersect )
-		    and (candidate.vx > minp.x - d or candidate.vx < (mapchunk_size+d) )
-		    and (candidate.vz > minp.z - d or candidate.vz < (mapchunk_size+d) )) then
+		    and (candidate.vx > minp.x - d or candidate.vx < (minp.x+mapchunk_size+d) )
+		    and (candidate.vz > minp.z - d or candidate.vz < (minp.z+mapchunk_size+d) )) then
 			table.insert( villages, candidate );
 
 			-- there may be quite a lot of single houses added; plus they are less intresting than entire villages. Thus, logfile spam is reduced
-			mg_villages.print( mg_villages.DEBUG_LEVEL_WARNING, 'adding SINGLE HOUSE of type '..tostring( candidate.village_type )..
-				' to map at '..tostring( candidate.vx )..':'..tostring( candidate.vz )..'.');
+			mg_villages.print( mg_villages.DEBUG_LEVEL_WARNING, S("adding SINGLE HOUSE of type")..' '..tostring( candidate.village_type )..
+				' '..S("to map at")..' '..tostring( candidate.vx )..':'..tostring( candidate.vz )..'.');
 		end
 	end
 	return villages;

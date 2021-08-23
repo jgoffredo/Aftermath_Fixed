@@ -30,7 +30,7 @@ replacements_group['wood'].replace_material = function( replacements, old_wood, 
 	for i=3,#old_nodes do
 		local old = old_nodes[i];
 		local new = old;
-		if( i<=#new_nodes and new_nodes[i] and minetest.registered_nodes[ new_nodes[i]] ) then
+		if( old and new_nodes[i] and handle_schematics.node_defined( new_nodes[i])) then
 			new = new_nodes[i];
 			local found = false;
 			for i,v in ipairs(replacements) do
@@ -65,7 +65,7 @@ replacements_group['wood'].add_material = function( candidate_list, mod_prefix, 
 		-- create a complete list of all possible wood names
 		table.insert( replacements_group['wood'].all, wood_name );
 		-- create a list of all *installed* wood types
-		if( minetest.registered_nodes[ wood_name ]) then
+		if( handle_schematics.node_defined( wood_name )) then
 			table.insert( replacements_group['wood'].found, wood_name );
 			is_loaded = true;
 		end
@@ -83,12 +83,14 @@ replacements_group['wood'].add_material = function( candidate_list, mod_prefix, 
 				gate_pre..v..gate_post..'_open',  -- 10.  "  "    for cottages:gate_open
 				gate_pre..v..gate_post..'_closed',-- 11.  "  "    for cottages:gate_closed
 		};
+		data[24] = stair_pre.."inner_"..v..stair_post; -- 24. "  "  for stairs:stair_inner_wood
+		data[25] = stair_pre.."outer_"..v..stair_post; -- 25. "  "  for stairs:stair_outer_wood
 
 		-- normal wood does have a number of nodes which might get replaced by more specialized wood types
 		if( mod_prefix=='default:' and v=='' ) then
 			local w = 'wood';
-			data[10] = 'cottages:gate_open';
-			data[11] = 'cottages:gate_closed';
+			data[10] = 'doors:gate_wood_open';
+			data[11] = 'doors:gate_wood_closed';
 			data[12] = 'default:ladder';
 			data[13] = 'doors:door_'..w..'_t_1';
 			data[14] = 'doors:door_'..w..'_t_2';
@@ -101,6 +103,12 @@ replacements_group['wood'].add_material = function( candidate_list, mod_prefix, 
 			data[21] = 'stairs:slab_'..w..'upside_down';
 			data[22] = 'doors:trapdoor_open';
 			data[23] = 'doors:trapdoor';
+			data[24] = 'stairs:stair_inner_'..w;
+			data[25] = 'stairs:stair_outer_'..w;
+			data[26] = 'doors:door_wood_a';
+			data[27] = 'doors:door_wood_b';
+			data[28] = 'doors:hidden';
+
 		-- realtest has some further replacements
 		elseif( mod_prefix=='trees:' and w_post=='_planks' and t_post=='_log' ) then
 			data[12] = 'trees:'..v..'_ladder';
@@ -115,17 +123,39 @@ replacements_group['wood'].add_material = function( candidate_list, mod_prefix, 
 			data[21] = 'trees:'..v..'_planks_slab_upside_down';
 			data[22] = 'hatches:'..v..'_hatch_opened_top';
 			data[23] = 'hatches:'..v..'_hatch_opened_bottom';
+			data[24] = 'stairs:stair_inner_'..v..'_wood';
+			data[25] = 'stairs:stair_outer_'..v..'_wood';
+			data[26] = data[15];
+			data[27] = data[16];
+			data[28] = 'doors:hidden';
+		elseif( mod_prefix=='mcl_core:') then
+			local v_bak = v
+			if(v == "darkwood") then
+				v = 'dark_oak'
+			end
+			data[11] = 'mcl_fences:'..v..'_fence_gate';
+			data[12] = 'mcl_core:ladder';
+			data[13] = 'mcl_doors:'..v..'_door_t_1'; -- TODO: wooden_door
+			data[14] = 'mcl_doors:'..v..'_door_t_2';
+			data[15] = 'mcl_doors:'..v..'_door_b_1';
+			data[16] = 'mcl_doors:'..v..'_door_b_2';
+			data[17] = 'mcl_books:bookshelf';
+			data[18] = 'mcl_chests:chest';
+			data[19] = 'mcl_chests:chest';
+			data[20] =   'stairs:stair_'..v..'upside_down';
+			data[21] =   'stairs:slab_'..v..'upside_down';
+			data[22] = 'doors:'..v..'_trapdoor_open';
+			data[23] = 'doors:'..v..'_trapdoor';
+			data[24] =   'stairs:stair_inner_'..v;
+			data[26] = data[15];
+			data[27] = data[16];
+			data[28] = data[13]; -- no way to decide automaticly which door top fits
+			v = v_bak
 		end
 		replacements_group['wood'].data[ wood_name ] = data;
 
 		-- none of the wood nodes counts as ground
-		local c_ignore = minetest.get_content_id( 'ignore' );
-		for _,v in ipairs( data ) do
-			local id = minetest.get_content_id( v );
-			if( id and id ~= c_ignore ) then
-				replacements_group.node_is_ground[ id ] = false;
-			end
-		end
+		handle_schematics.set_node_is_ground(data, false);
 
 		if( is_loaded and minetest.get_modpath('mobf_trader') and mobf_trader and mobf_trader.add_trader ) then
 			-- TODO: check if all offered payments exist
@@ -164,10 +194,13 @@ replacements_group['wood'].construct_wood_type_list = function()
 	-- https://github.com/minetest/minetest_game
 	-- default tree and jungletree; no gates available
 	replacements_group['wood'].add_material( {'', 'jungle' },     'default:', '','wood','', 'tree',  '','leaves',  '','sapling',
-		'stairs:stair_', 'wood', 'stairs:slab_', 'wood',   'default:fence_','wood',  'NONE', '' );
+		'stairs:stair_', 'wood', 'stairs:slab_', 'wood',   'default:fence_','wood',  'doors:gate_', 'wood' );
 	-- default:pine_needles instead of leaves; no gates available
-	replacements_group['wood'].add_material( {'pine' },           'default:', '','wood','', 'tree',  '','_needles','','_sapling',
-		'stairs:stair_', 'wood', 'stairs:slab_', 'wood',   'default:fence_','wood',  'NONE','' );
+	replacements_group['wood'].add_material( {'pine' },           'default:', '','_wood','', '_tree',  '','_needles','','_sapling',
+		'stairs:stair_', 'wood', 'stairs:slab_', 'wood',   'default:fence_','_wood',  'doors:gate_','_wood' );
+	-- acacia and aspen
+	replacements_group['wood'].add_material( {'acacia', 'aspen'},  'default:', '','_wood','', '_tree',  '','_leaves',  '','_sapling',
+		'stairs:stair_', '_wood', 'stairs:slab_', '_wood',   'default:fence_','_wood',  'doors:gate_', '_wood' );
 
 	-- https://github.com/Novatux/mg
 	-- trees from nores mapgen
@@ -177,14 +210,20 @@ replacements_group['wood'].construct_wood_type_list = function()
 
 	-- https://github.com/VanessaE/moretrees
 	-- minus the jungletree (already in default)
-	local moretrees_treelist = {"beech","apple_tree","oak","sequoia","birch","palm","spruce","pine","willow","acacia","rubber_tree","fir" };
+	local mt_pre_stair = "stairs:stair_moretrees_" -- moretrees stair prefix
+	local mt_pre_slab  = "stairs:slab_moretrees_"
+	if(minetest.get_modpath("moreblocks")) then
+		mt_pre_stair = "moretrees:stair_"
+		mt_pre_slab  = "moretrees:slab_"
+	end
+	local moretrees_treelist = {"beech","apple_tree","oak","sequoia","birch","palm","spruce","willow","rubber_tree","fir" }; -- "pine", "acacia"
 	replacements_group['wood'].add_material( moretrees_treelist,  'moretrees:', '', '_planks', '','_trunk', '','_leaves','','_sapling',
-		'moretrees:stair_','_planks', 'moretrees:slab_','_planks',   'NONE','',  'NONE','');
+		mt_pre_stair,'_planks', mt_pre_slab,'_planks', 'NONE','',  'NONE','');
 	
 
 	-- https://github.com/tenplus1/ethereal
 	-- ethereal does not have a common naming convention for leaves
-	replacements_group['wood'].add_material( {'acacia','redwood'},'ethereal:',  '','_wood',   '','_trunk', '','_leaves', '','_sapling',
+	replacements_group['wood'].add_material( {'acacia','redwood','birch'},'ethereal:',  '','_wood',   '','_trunk', '','_leaves', '','_sapling',
 		'stairs:stair_','_wood', 'stairs:slab_','_wood',   'ethereal:fence_','',     'ethereal:','gate');
 	-- frost has another sapling type...
 	replacements_group['wood'].add_material( {'frost'},           'ethereal:',  '','_wood',   '','_tree', '','_leaves', '','_tree_sapling',
@@ -205,6 +244,7 @@ replacements_group['wood'].construct_wood_type_list = function()
 	-- the stairs are also called slightly diffrently (end in _trunk instead of _wood)
 	replacements_group['wood'].add_material( {'mushroom'},        'ethereal:',  '','_pore',   '','_trunk', '','',        '','_sapling',
 		'stairs:stair_','_trunk', 'stairs:slab_','_trunk', 'ethereal:fence_', '',    'ethereal:','gate' );
+	-- note: big tree and orange tree do not have their own wood
 
 	
 	-- https://github.com/VanessaE/realtest_game
@@ -223,6 +263,31 @@ replacements_group['wood'].construct_wood_type_list = function()
 		'stairs:stair_','_wood',  'stairs:slab_','_wood',    'NONE','',            'NONE',''        );
 
 
+	-- MineClone2
+	local mineclone2_treelist = {"jungle","spruce","acacia","birch" };
+	replacements_group['wood'].add_material( mineclone2_treelist,
+		'mcl_core:', '', 'wood', '','tree', '','leaves','','sapling',
+		'mcl_stairs:stair_','wood', 'mcl_stairs:slab_','wood',
+		'mcl_fences:','_fence', 'mcl_fences:','_fence_gate' );
+	-- normal wood needs special treatment
+	replacements_group['wood'].add_material( {""},
+		'mcl_core:', '', 'wood', '','tree', '','leaves','','sapling',
+		'mcl_stairs:stair_','wood', 'mcl_stairs:slab_','wood',
+		'mcl_fences:','fence', 'mcl_fences:','fence_gate' );
+	-- the doors made out of wood do not follow the internal naming convention of MineClone2
+	replacements_group['wood'].data[ 'mcl_core:wood' ][13] = 'mcl_doors:wooden_door_t_1';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][14] = 'mcl_doors:wooden_door_t_2';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][15] = 'mcl_doors:wooden_door_b_1';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][16] = 'mcl_doors:wooden_door_b_2';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][26] = 'mcl_doors:wooden_door_b_1';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][27] = 'mcl_doors:wooden_door_b_2';
+	replacements_group['wood'].data[ 'mcl_core:wood' ][28] = 'mcl_doors:wooden_door_t_1';
+	-- dark oak needs special treatment
+	replacements_group['wood'].add_material( {"dark"},
+		'mcl_core:', '', 'wood', '','tree', '','leaves','','sapling',
+		'mcl_stairs:stair_','wood', 'mcl_stairs:slab_','wood',
+		'mcl_fences:','_oak_fence', 'mcl_fences:','_oak_fence_gate' );
+
 	-- https://github.com/PilzAdam/farming_plus
 	-- TODO: this does not come with its own wood... banana and cocoa trees (only leaves, sapling and fruit)
 	-- TODO:      farming_plus:TREETYP_sapling   farming_plus:TREETYP_leaves   farming_plus:TREETYP 
@@ -232,3 +297,15 @@ end
 -- actually construct the data structure once
 replacements_group['wood'].construct_wood_type_list();
 
+-- needed by handle_schematics.generate_building_translate_nodenames
+-- in order to identify saplings that need to be grown
+handle_schematics.is_sapling = {}
+for k,v in pairs(replacements_group['wood'].data) do
+	-- if tree trunk and sapling exist in this game
+	if(   minetest.registered_nodes[v[6]]) then
+		-- both the name of the sapling..
+		handle_schematics.is_sapling[v[6]] = true
+		-- ..and its content_id are saplings
+		handle_schematics.is_sapling[minetest.get_content_id(v[6])] = true
+	end
+end

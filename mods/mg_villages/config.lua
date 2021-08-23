@@ -6,16 +6,16 @@ mg_villages.ENABLE_VILLAGES = true;
 
 -- generate one random building for each mg_villages.INVERSE_HOUSE_DENSITY th mapchunk;
 -- set to 0 in order to disable spawning of these lone buildings outside villages
-mg_villages.INVERSE_HOUSE_DENSITY = 5;
+mg_villages.INVERSE_HOUSE_DENSITY = 4;
 
 -- cover some villages with artificial snow; probability: 1/mg_villages.artificial_snow_probability
-mg_villages.artificial_snow_probability = 1;
+mg_villages.artificial_snow_probability = 10;
 
 -- if set to true, soil around villaes will get special soil-snow instead of plant + snow cover
 mg_villages.use_soil_snow = false;
 
 -- only place roads if there are at least that many buildings in the village
-mg_villages.MINIMAL_BUILDUNGS_FOR_ROAD_PLACEMENT = 14;
+mg_villages.MINIMAL_BUILDUNGS_FOR_ROAD_PLACEMENT = 4;
 
 
 -- players without the mg_villages priv can only see villages which are less than that many blocks away
@@ -24,26 +24,35 @@ mg_villages.VILLAGE_DETECT_RANGE = 400;
 
 -- if set to true, only players which have the mg_villages priv can use the "/visit <village nr>"
 -- command which allows teleporting to the village with the given number
-mg_villages.REQUIRE_PRIV_FOR_TELEPORT = true;
+mg_villages.REQUIRE_PRIV_FOR_TELEPORT = false;
 
 -- if set to true, players cannot modify spawned villages without buying the house from the village first
-mg_villages.ENABLE_PROTECTION = false;
+mg_villages.ENABLE_PROTECTION = true;
 
 -- the first village - the one the player spawns in - will be of this type
---mg_villages.FIRST_VILLAGE_TYPE = 'ruins';
-mg_villages.FIRST_VILLAGE_TYPE = 'taoki';
+mg_villages.FIRST_VILLAGE_TYPE = 'medieval';
 
 -- the mapgen will disregard mapchunks where min.y > mg_villages.MAX_HEIGHT_TREATED;
 -- you can set this value to 64 if you have a slow machine and a mapgen which does not create extreme mountains
 -- (or if you don't care if extreme mountains may create burried villages occasionally)
-mg_villages.MAX_HEIGHT_TREATED = 220;  --higher number the more bore hole through mountain above.
+mg_villages.MAX_HEIGHT_TREATED = 200;
 
 -- choose the debug level you want
 mg_villages.DEBUG_LEVEL = mg_villages.DEBUG_LEVEL_NORMAL
+--mg_villages.DEBUG_LEVEL = mg_villages.DEBUG_LEVEL_TIMING
+
+-- if set to true, a water source will be added all 2-3 blocks on a field for farming;
+-- as long as you do not plan to dig up all fields, hoe them and use them manually,
+-- better keep this to "false" as that is much faster
+mg_villages.PLACE_WATER_FOR_FARMING = false
 
 -- if set to true (or anything else but nil or false), highlandpools by paramat (see
 -- https://forum.minetest.net/viewtopic.php?t=8400) will be created
-mg_villages.CREATE_HIGHLANDPOOLS = false
+mg_villages.CREATE_HIGHLANDPOOLS = true
+
+-- Torches are replaced by mg_villages:torch - which does not melt snow. If you want to use the normal
+-- torches from minetest_game, set this to true.:w!
+mg_villages.USE_DEFAULT_3D_TORCHES = true;
 
 -- background image for the /vmap command
 -- RealTest comes with a diffrent texture
@@ -60,7 +69,7 @@ end
 mg_villages.medieval_subtype = false;
 
 -- set this to true if you want to use normal lava - but beware: charachoal villages may cause bushfires!
-mg_villages.use_normal_unsafe_lava = true;
+--mg_villages.use_normal_unsafe_lava = false;
 
 -----------------------------------------------------------------------------
 -- decrese these values slightly if you want MORE trees around your villages;
@@ -69,12 +78,18 @@ mg_villages.use_normal_unsafe_lava = true;
 -- on average, every n.th node inside a village area may be one of these trees - and it will be a relatively dense packed forrest
 mg_villages.sapling_probability = {};
 
-mg_villages.sapling_probability[ minetest.get_content_id( 'default:sapling' )       ] = 10; -- suitable for a relatively dense forrest of normal trees
-mg_villages.sapling_probability[ minetest.get_content_id( 'default:junglesapling' ) ] = 10; -- jungletrees are a bit bigger and need more space
-mg_villages.sapling_probability[ minetest.get_content_id( 'default:pinesapling' )   ] = 10;
+if(minetest.registered_nodes['default:sapling']) then
+	mg_villages.sapling_probability[ minetest.get_content_id( 'default:sapling' )       ] = 25; -- suitable for a relatively dense forrest of normal trees
+end
+if(minetest.registered_nodes['default:junglesapling']) then
+	mg_villages.sapling_probability[ minetest.get_content_id( 'default:junglesapling' ) ] = 40; -- jungletrees are a bit bigger and need more space
+end
+if(minetest.registered_nodes['default:pine_sapling']) then
+	mg_villages.sapling_probability[ minetest.get_content_id( 'default:pine_sapling' )   ] = 30;
+end
 if( minetest.get_modpath( 'mg' )) then
-	mg_villages.sapling_probability[ minetest.get_content_id( 'mg:savannasapling'     ) ] = 10;
-	mg_villages.sapling_probability[ minetest.get_content_id( 'mg:pinesapling'        ) ] = 10;
+	mg_villages.sapling_probability[ minetest.get_content_id( 'mg:savannasapling'     ) ] = 30; 
+	mg_villages.sapling_probability[ minetest.get_content_id( 'mg:pinesapling'        ) ] = 35; 
 end
 mg_villages.moretrees_treelist = nil;
 if( minetest.get_modpath( 'moretrees' )) then
@@ -84,7 +99,7 @@ if( minetest.get_modpath( 'moretrees' )) then
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:fir_sapling_ongen'         ) ] =  90;
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:jungletree_sapling_ongen'  ) ] = 200;
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:beech_sapling_ongen'       ) ] =  30;
-	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:apple_sapling_ongen'       ) ] = 380;
+	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:apple_tree_sapling_ongen'  ) ] = 380;
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:oak_sapling_ongen'         ) ] = 380; -- ca 20x20; height: 10
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:sequoia_sapling_ongen'     ) ] =  90; -- ca 10x10
 	mg_villages.sapling_probability[ minetest.get_content_id( 'moretrees:palm_sapling_ongen'        ) ] =  90;
@@ -111,7 +126,7 @@ end
 -----------------------------------------------------------------------------
 -- how much does the player have to pay for a plot with a building?
 mg_villages.prices = {
-	empty          = "default:copper_ingot 1", -- plot to build on
+	empty          = "default:copper_ingot 1", -- plot to build on 
 
 	-- building types which usually have inhabitants (and thus allow the player
 	-- who bought the building to modifiy the entire village area minus other
@@ -152,6 +167,16 @@ mg_villages.prices = {
 
 	-- chateaus are expensive
 	chateau        = "default:diamondblock 5",
+
+	-- one mese crystal per square meter in the spawn town :-)
+	empty6x12      = "default:mese_crystal 72",
+	empty8x8       = "default:mese_crystal 64",
+	-- a large plot costs mese blocks
+	empty16x16     = "default:mese 56",
+	-- this is just enough space to grow a tree
+        empty5x5       = "default:mese_crystal 12",
+	-- nobody is supposed to buy the spawn building...except for the admin
+	spawn          = "nyancat:nyancat 99",
 }
 
 
@@ -174,7 +199,7 @@ mg_villages.VILLAGE_CHECK_COUNT = 1
 mg_villages.VILLAGE_CHANCE = 28
 -- min and max size are only used in case of them beeing not provided by the village type (see buildings.lua)
 mg_villages.VILLAGE_MIN_SIZE = 25
-mg_villages.VILLAGE_MAX_SIZE = 60 --55
+mg_villages.VILLAGE_MAX_SIZE = 90 --55
 mg_villages.FIRST_ROADSIZE = 3
 mg_villages.BIG_ROAD_CHANCE = 0
 
