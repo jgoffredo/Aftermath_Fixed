@@ -413,14 +413,17 @@ end
 
 -- check if within physical map limits (-30911 to 30927)
 function within_limits(pos, radius)
-
-	if  (pos.x - radius) > -30913
-	and (pos.x + radius) <  30928
-	and (pos.y - radius) > -30913
-	and (pos.y + radius) <  30928
-	and (pos.z - radius) > -30913
-	and (pos.z + radius) <  30928 then
-		return true -- within limits
+	if pos ~= nil then --might fix the possible of missing pos crashing the game
+		if  (pos.x - radius) > -30913
+		and (pos.x + radius) <  30928
+		and (pos.y - radius) > -30913
+		and (pos.y + radius) <  30928
+		and (pos.z - radius) > -30913
+		and (pos.z + radius) <  30928 then
+			return true -- within limits
+		end
+	else
+		return
 	end
 
 	return false -- beyond limits
